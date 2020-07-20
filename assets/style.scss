@@ -1,0 +1,19 @@
+body {
+  background: #ccc;
+}
+.curso-table {
+  & .v-data-table-header {
+    background: var(--v-primary-darken1);
+    & th {
+      height: 55px !important;
+      color: white !important;
+    }
+  }
+  .v-badge__wrapper {
+    span {
+      height: 15px !important;
+      width: 15px !important;
+      border-radius: calc(15px / 2);
+    }
+  }
+}
