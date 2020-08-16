@@ -86,6 +86,8 @@
           <span>{{ item.kpiT }}%</span>
         </v-badge>
       </template>
+      <template v-slot:item.performance><chart /> </template>
+
       <template v-slot:item.actions="{ item }">
         <v-tooltip top color="grey darken-2">
           <template v-slot:activator="{ on }">
@@ -143,7 +145,11 @@ export default {
         sortable: false,
         align: 'center'
       },
-      { text: 'Proyecto 3', value: 'nP3', sortable: false, align: 'center' }
+      { text: 'Proyecto 3', value: 'nP3', sortable: false, align: 'center' },
+      { text: 'Proyecto 4', value: 'nP3', sortable: false, align: 'center' },
+      { text: 'Proyecto 5', value: 'nP3', sortable: false, align: 'center' },
+      { text: 'Proyecto 6', value: 'nP3', sortable: false, align: 'center' },
+      { text: 'Proyecto 7', value: 'nP3', sortable: false, align: 'center' }
     ],
     headerEstudiantesCurso: [
       { text: 'Apellidos y Nombres', value: 'fullname', sortable: false },
@@ -167,10 +173,41 @@ export default {
         align: 'center'
       },
       {
+        text: 'KPI Proyecto 4',
+        value: 'kpiT4',
+        sortable: false,
+        align: 'center'
+      },
+      {
+        text: 'KPI Proyecto 5',
+        value: 'kpiT5',
+        sortable: false,
+        align: 'center'
+      },
+      {
+        text: 'KPI Proyecto 6',
+        value: 'kpiT6',
+        sortable: false,
+        align: 'center'
+      },
+      {
+        text: 'KPI Proyecto 7',
+        value: 'kpiT7',
+        sortable: false,
+        align: 'center'
+      },
+      {
         text: 'KPI Total Promedio',
         value: 'kpiT',
         sortable: false,
         align: 'center'
+      },
+      {
+        text: 'Performance',
+        value: 'performance',
+        sortable: false,
+        align: 'center',
+        width: 120
       },
       { text: 'Acciones', value: 'actions', sortable: false }
     ]
