@@ -23,6 +23,25 @@ export const mutations = {
       d.kpiT = count ? (x.kpiT1 + x.kpiT2 + x.kpiT3) / count : 0
       return d
     })
+
+    const data = [
+      { name: 'Proyecto 1', value: 'd', other: 'x' },
+      { name: 'Proyecto 2', value: 'd', other: 'x' },
+      { name: 'Proyecto 3', value: 'd', other: 'x' },
+      { name: 'Proyecto 4', value: 'd', other: 'x' },
+      { name: 'Proyecto 5', value: 'd', other: 'x' },
+      { name: 'Proyecto 6', value: 'd', other: 'x' }
+    ]
+    console.log(data)
+    console.log('===============', state.listaJugadores)
+    const d = true
+    const b = false
+    if (d) {
+    } else if (b) {
+    } else if (b) {
+    } else if (b) {
+    } else {
+    }
   },
   SET_LIST_PROYECTO_JUGADOR(state, payload) {
     state.listaProyectoJugador = payload

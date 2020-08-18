@@ -11,6 +11,8 @@ export const mutations = {
 }
 const TOKEN_AUTH_USERNAME = 'Clave Personalizada'
 const TOKEN_AUTH_PASSWORD = 'Clave Personalizada'
+const Cookie = process.client ? require('js-cookie') : undefined
+
 export const actions = {
   load({ commit }) {
     try {
@@ -47,7 +49,7 @@ export const actions = {
     this.$axios
       .post(
         'Usuarios/login/',
-        { username, password },
+        { email: username, password },
         {
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -58,9 +60,27 @@ export const actions = {
         }
       )
       .then((x) => {
-        commit('set', x)
+        console.log('x.dtaa', x)
+        const auth = {
+          accessToken: x.data.token
+        }
+        commit('setAuth', auth, { root: true }) // mutating to store for client rendering
         this.$router.push('/')
+        Cookie.set('auth', auth) // saving token in cookie for server rendering
+        commit(
+          'SHOW_SNACKBAR',
+          { color: 'success', message: 'Bienvenido' },
+          { root: true }
+        )
       })
-      .catch(() => {})
+      .catch((e) => {
+        // Se tiene que mejorar el mensaje de retorno
+        console.log(e)
+        commit(
+          'SHOW_SNACKBAR',
+          { color: 'error', message: 'Usuario o Contraseña Incorrecta' },
+          { root: true }
+        )
+      })
   }
 }

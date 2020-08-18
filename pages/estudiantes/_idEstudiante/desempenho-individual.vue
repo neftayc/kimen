@@ -4,7 +4,7 @@
       <div class="d-flex justify-space-between">
         <div>
           <h2 class="title">Desempeño Individual</h2>
-          <p>Detalle de Estudiente: {{ jugadorData.name }}</p>
+          <p>Detalle de Estudiante: {{ jugadorData.name }}</p>
         </div>
         <div>
           <v-tooltip top color="grey darken-2">

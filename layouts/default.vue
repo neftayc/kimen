@@ -5,10 +5,11 @@
       fixed
       app
       dark
+      :mini-variant="miniVariant"
       color="primary darken-2"
     >
-      <v-list>
-        <v-list-item class="my-6 px-8">
+      <v-list dense>
+        <v-list-item two-line :class="miniVariant ? 'my-6 px-2' : 'my-6 px-8'">
           <v-list-item-avatar>
             <v-img :src="require('@/static/avatar.jpg')" />
           </v-list-item-avatar>
@@ -35,9 +36,25 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-3">
+          <v-divider></v-divider>
+          <div class="pt-2 d-flex justify-space-between align-center">
+            <img
+              contain
+              height="30px"
+              :src="require('@/static/logoKimen.png')"
+            />
+            <span class="caption white--text">v1.2</span>
+          </div>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar absolute app color="transparent" flat height="75">
+      <v-app-bar-nav-icon
+        @click.stop="miniVariant = !miniVariant"
+      ></v-app-bar-nav-icon>
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <div>
@@ -53,26 +70,26 @@
       </div>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <nuxt />
-    </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>mdi-repeat</v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+    </v-main>
+
+    <v-snackbar
+      v-model="input_snackbar"
+      :bottom="snackbar.y === 'bottom'"
+      :left="snackbar.x === 'left'"
+      :right="snackbar.x === 'right'"
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      :top="snackbar.y === 'top'"
+      >{{ snackbar.message }}</v-snackbar
+    >
   </v-app>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   middleware: ['auth'],
   data() {
@@ -106,6 +123,20 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Dashboard'
+    }
+  },
+
+  computed: {
+    ...mapState({
+      snackbar: (state) => state.snackbar
+    }),
+    input_snackbar: {
+      get() {
+        return this.$store.state.snackbar.state
+      },
+      set(value) {
+        this.$store.commit('SHOW_SNACKBAR_STATE', value)
+      }
     }
   }
 }
