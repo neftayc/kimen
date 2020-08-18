@@ -25,6 +25,27 @@ export const actions = {
   login({ commit }, { username, password }) {
     this.$axios
       .post(
+        'usuarios/login/',
+        { email: username, password },
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            Authorization:
+              'Basic ' + btoa(TOKEN_AUTH_USERNAME + ':' + TOKEN_AUTH_PASSWORD)
+          }
+        }
+      )
+      .then((x) => {
+        commit('set', x)
+        this.$router.push('/')
+      })
+      .catch(() => {})
+  },
+
+  loginP({ commit }, { username, password }) {
+    this.$axios
+      .post(
         'Usuarios/login/',
         { username, password },
         {
