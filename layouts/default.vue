@@ -91,7 +91,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  middleware: ['auth'],
+  // middleware: ['auth'],
   data() {
     return {
       clipped: false,

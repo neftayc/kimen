@@ -103,7 +103,7 @@ export default {
 
     // Draw the text
     ctx.fillStyle = '#000'
-    ctx.font = '0.7em sans-serif' 
+    ctx.font = '0.7em sans-serif'
     ctx.textAlign = 'center'
     ctx.fillText(Math.floor(this.value), newBox.x + newBox.w / 2, newBox.y - 14)
     return ctx
