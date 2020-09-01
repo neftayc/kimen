@@ -11,6 +11,10 @@ export default {
    ** See https://nuxtjs.org/api/configuration-target
    */
   target: 'static',
+  server: {
+    port: 9000, // default: 3000
+    host: '0.0.0.0' // default: localhost,
+  },
   /*
    ** Headers of the page
    ** See https://nuxtjs.org/api/configuration-head
@@ -57,10 +61,15 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content'
   ],
+  proxy: {
+    '/api': 'http://192.168.42.161:9000'
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
@@ -69,6 +78,31 @@ export default {
     // baseURL: 'https://kime-atenos.azurewebsites.net/api/'
     baseURL: 'https://kimen-1.azurewebsites.net/api/'
     // baseURL: 'https://localhost:5001/api/'
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: 'usuarios/login/',
+            method: 'post',
+            propertyName: 'trace'
+          },
+          logout: false,
+          // user: false,
+          user: { url: 'usuarios/datos/', method: 'get', propertyName: false }
+        },
+        tokenRequired: true,
+        tokenType: 'Bearer'
+      }
+    },
+    redirect: {
+      callback: '/callback',
+      login: '/login',
+      logout: '/login',
+      home: '/cursos'
+    },
+    rewriteRedirects: true
   },
   /*
    ** Content module configuration

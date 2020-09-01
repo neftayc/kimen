@@ -1,9 +1,6 @@
 <template>
   <v-container fluid>
-    <div class="d-flex justify-space-between mb-8">
-      <div>
-        <h2 class="title">Dashboard Curso</h2>
-      </div>
+    <div class="d-flex justify-end">
       <div>
         <v-tooltip top color="grey darken-2">
           <template v-slot:activator="{ on }">
@@ -23,7 +20,11 @@
     <v-data-table
       class="curso-table"
       :headers="headerCurso"
-      :items="proyectoHeader"
+      :items="
+        proyectoHeader.filter(
+          (x) => x.seccionCursoId === parseInt($route.params.idCurso)
+        )
+      "
       hide-default-footer
     >
       <template v-slot:item.actions="{ item }">
@@ -64,7 +65,7 @@
     </v-data-table>
     <br />
 
-    <h2 class="title">Proyectos</h2>
+    <h2 class="text-subtitle-1">Lista de Proyectos</h2>
     <v-data-table
       class="curso-table"
       :headers="headerProyectos"
@@ -148,25 +149,40 @@
 import { mapState } from 'vuex'
 export default {
   async fetch({ store, params }) {
-    await store.dispatch('cursos/getCurso', params.idCurso)
+    await store.dispatch('cursos/listCursos')
+    await store.dispatch('cursos/getProyectosCurso', params.idCurso)
+    await store.commit('CHANGE_PAGE_TITLE', 'Curso - Dashboard')
   },
   data: () => ({
     headerCurso: [
-      { text: 'Universidad', value: 'nombreUniversidad', sortable: false },
-      { text: 'Curso', value: 'nombre', sortable: false },
       {
-        text: 'Estudiantes',
-        value: 'cantEstu',
+        text: 'Id',
+        value: 'cursoId',
+        align: 'center',
+        width: 70,
+        sortable: false
+      },
+      { text: 'Curso', value: 'nombre', width: 300 },
+      { text: 'Sección', value: 'seccion', sortable: false, width: 200 },
+      {
+        text: 'N° Estudiantes',
+        value: 'contEstudiantes',
         sortable: false,
         align: 'center'
       },
       {
-        text: 'Periodo Académico',
-        value: 'periodo',
+        text: 'Fecha Inicio',
+        value: 'fechaInicio',
         sortable: false,
         align: 'center'
       },
-      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' }
+      {
+        text: 'Fecha Fin',
+        value: 'fechaTermino',
+        sortable: false,
+        align: 'center'
+      },
+      { text: 'Acciones', value: 'actions', align: 'center', sortable: false }
     ],
     headerProyectos: [
       { text: 'Proyectos', value: 'nombreProyecto', sortable: false },
@@ -234,8 +250,8 @@ export default {
   }),
   computed: {
     ...mapState({
-      proyectoHeader: (state) => [state.cursos.curso[0]],
-      proyectoList: (state) => state.cursos.curso
+      proyectoHeader: (state) => state.cursos.cursosData,
+      proyectoList: (state) => state.cursos.proyectosCurso
     })
   },
   methods: {

@@ -3,7 +3,6 @@
     <v-card>
       <v-toolbar flat color="white">
         <v-toolbar-title>Instituciones</v-toolbar-title>
-
         <v-spacer></v-spacer>
         <v-tooltip bottom>
           <template v-slot:activator="on">
@@ -38,6 +37,7 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 small
+                depressed
                 color="info"
                 class="px-2 mx-1"
                 :min-width="0"
@@ -53,6 +53,7 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 small
+                depressed
                 color="error"
                 class="px-2 mx-1"
                 :min-width="0"
@@ -112,7 +113,7 @@
               <v-btn
                 color="primary darken-1"
                 class="mx-1"
-                @click="modalForm = false"
+                @click="saveInstitucion()"
               >
                 <span class="text-capitalice">Guardar</span>
               </v-btn>
@@ -130,13 +131,17 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+  async fetch({ store }) {
+    await store.dispatch('configuracion/listarInstituciones')
+    await store.commit('CHANGE_PAGE_TITLE', 'Configuración')
+  },
   data: () => ({
     Institucion: {},
     headersInstitucion: [
       { text: 'Logo', value: 'logo', sortable: false },
-      { text: 'Nombre', value: 'name', sortable: false, width: 200 },
-      { text: 'Descripción', value: 'description', sortable: false },
-      { text: 'Tipo', value: 'type', sortable: false },
+      { text: 'Nombre', value: 'nombre', sortable: false, width: 200 },
+      { text: 'Descripción', value: 'descripcion', sortable: false },
+      { text: 'Tipo', value: 'tipoInstitucion', sortable: false },
       { text: 'País', value: 'pais', sortable: false },
       {
         text: 'Accions',
@@ -147,10 +152,14 @@ export default {
       }
     ],
     listaTipos: [
+      { id: 0, name: 'Universidad' },
       { id: 1, name: 'Colegio' },
-      { id: 2, name: 'Universidad' },
+      { id: 2, name: 'Liceo' },
       { id: 3, name: 'Escuela' },
-      { id: 4, name: 'Instituto' }
+      { id: 4, name: 'Instituto' },
+      { id: 5, name: 'CFT' },
+      { id: 6, name: 'IP' },
+      { id: 7, name: 'Otro' }
     ],
     listaPaises: [
       { id: 1, name: 'Perú' },
@@ -168,15 +177,15 @@ export default {
     })
   },
   methods: {
+    saveInstitucion() {
+      this.$store.dispatch('configuracion/saveInstitucion', this.Institucion)
+      this.modalForm = false
+    },
     editarInstitucion(item) {
       this.modalForm = true
       this.Institucion = item
     },
     deleteInstitucion(index, item) {
-      console.log('====================================')
-      console.log(index)
-      console.log(item)
-      console.log('====================================')
       this.listaInstitucion.splice(index, 1)
     }
   }

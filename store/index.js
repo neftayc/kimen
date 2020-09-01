@@ -3,6 +3,8 @@ const debug = process.env.NODE_ENV !== 'production'
 export const strict = debug
 export const plugins = [createLogger()]
 export const state = () => ({
+  auth: '',
+  user: {},
   snackbar: {
     x: 'right',
     y: 'top',
@@ -11,13 +13,10 @@ export const state = () => ({
     timeout: 5000,
     message: ''
   },
-  authToken: {}
+  titlePage: 'Dashboard'
 })
 
 export const mutations = {
-  setAuth(state, auth) {
-    state.authToken = auth
-  },
   SHOW_SNACKBAR(state, payload) {
     state.snackbar.state = true
     state.snackbar.message = payload.message
@@ -30,6 +29,9 @@ export const mutations = {
   },
   SHOW_SNACKBAR_STATE(state, payload) {
     state.snackbar.state = false
+  },
+  CHANGE_PAGE_TITLE(state, payload) {
+    state.titlePage = payload
   }
 }
 export const actions = {}

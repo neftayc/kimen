@@ -1,69 +1,6 @@
 export const state = () => ({
-  listaInstitucion: [
-    {
-      logo: require('@/static/logo.png'),
-      name: 'Institución N° 1',
-      description: 'Lorem ipsum dolor, sit amet consectetur  ',
-      type: 'Universidad',
-      pais: 'Perú'
-    },
-    {
-      logo: require('@/static/logo.png'),
-      name: 'Institución N° 2',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam doloremque quaerat quo sunt ',
-      type: 'Universidad',
-      pais: 'Colombia'
-    },
-    {
-      logo: require('@/static/logo.png'),
-      name: 'Institución N° 3',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit.  ',
-      type: 'Universidad',
-      pais: 'España'
-    },
-    {
-      logo: require('@/static/logo.png'),
-      name: 'Institución N° 4',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit.  ',
-      type: 'Colegio',
-      pais: 'Chile'
-    }
-  ],
-  listaCursos: [
-    {
-      id: 1,
-      institucion: 'Institución N° 1',
-      name: 'Ingeniería de Software',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit.  ',
-      codigo: 'ING-SOFT-A',
-      area: '--------',
-      status: true
-    },
-    {
-      id: 2,
-      institucion: 'Institución N° 2',
-      name: 'Arquitectura de Software',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit.  ',
-      codigo: 'ARQ-SOFT-A',
-      area: '--------',
-      status: true
-    },
-    {
-      id: 3,
-      institucion: 'Institución N° 3',
-      name: 'Proceso',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit.  ',
-      codigo: 'PROC-A',
-      area: '--------',
-      status: false
-    }
-  ],
+  listaInstitucion: [],
+  listaCursos: [],
   cursoData: {
     id: 1,
     institucion: 'Institución N° 1',
@@ -149,3 +86,61 @@ export const state = () => ({
     }
   ]
 })
+
+export const mutations = {
+  SET_DATA_INSTITUCIONES(state, payload) {
+    state.listaInstitucion = payload
+  },
+  SET_DATA_CURSOS(state, payload) {
+    state.listaCursos = payload
+  }
+}
+export const actions = {
+  // save institucion
+  listarInstituciones({ commit }, payload) {
+    this.$axios
+      .get('institucion/listar/', payload)
+      .then((x) => {
+        commit('SET_DATA_INSTITUCIONES', x.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  },
+  saveInstitucion({ commit }, payload) {
+    this.$axios
+      .post('institucion/crear/', payload)
+      .then((x) => {
+        console.log('=================saveInstitucion===================')
+        console.log(x)
+        console.log('=================saveInstitucion===================')
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  },
+  // save curso
+
+  listarCursos({ commit }, payload) {
+    this.$axios
+      .get('cursos/listar/', payload)
+      .then((x) => {
+        commit('SET_DATA_CURSOS', x.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  },
+  saveCurso({ commit }, payload) {
+    this.$axios
+      .post('cursos/crear/', payload)
+      .then((x) => {
+        commit('SET_DATA_CURSOS', x.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+  // save detalle curso
+  // otro
+}

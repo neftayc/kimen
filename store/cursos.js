@@ -1,19 +1,33 @@
 export const state = () => ({
   cursosData: [],
-  curso: [],
-  cursoSelected: [],
+  proyectosCurso: [],
+  seccionCursoSelected: [],
   profesoresUniversitarios: [],
-  notasCurso: {}
+  notasCurso: {},
+  cursoSeleccionado: {}
 })
 export const mutations = {
   SET_LIST_CURSOS(state, payload) {
     state.cursosData = payload
   },
-  SET_CURSO_ID(state, payload) {
-    state.curso = payload
+  SELECTED_CURSO(state, payload) {
+    console.log(payload)
+    console.log(state.cursosData)
+    console.log(
+      state.cursosData.find((x) => x.seccionCursoId === parseInt(payload))
+    )
+
+    state.cursoSeleccionado = state.cursosData.find(
+      (x) => x.seccionCursoId === parseInt(payload)
+    )
+      ? state.cursosData.find((x) => x.seccionCursoId === parseInt(payload))
+      : {}
   },
-  SET_CURSO_DATA(state, payload) {
-    state.cursoSelected = payload.cursoId ? [payload] : []
+  SET_PROYECTOS_CURSO(state, payload) {
+    state.proyectosCurso = payload
+  },
+  SET_SECCION_CURSO_DATA(state, payload) {
+    state.seccionCursoSelected = payload
   },
   SET_PROFESORES_UNIVERSITARIOS(state, payload) {
     state.profesoresUniversitarios = payload
@@ -26,24 +40,44 @@ export const mutations = {
   }
 }
 export const actions = {
-  listCursos({ commit }) {
+  async getCurso({ dispatch }, payload) {
+    await dispatch('listCursos', payload)
+  },
+  listCursos({ commit, rootState }, payload) {
     this.$axios
-      .get('Cursos/Listar')
-      .then((x) => {
-        commit('SET_LIST_CURSOS', x.data)
+      .get('cursos/listar', {
+        params: {
+          activos: true,
+          idInstitucion: rootState.auth.user.idInstitucion
+        }
+      })
+      .then(async (x) => {
+        await commit('SET_LIST_CURSOS', x.data)
+        if (payload) {
+          await commit('SELECTED_CURSO', payload)
+        }
       })
       .catch(() => {})
   },
-  selectCurso({ commit, dispatch }, payload) {
+  getProyectosCurso({ commit }, payload) {
     this.$axios
-      .get(`Cursos/select/${payload}`)
+      .get('seccion/proyectos/listar', { params: { id: payload } })
       .then((x) => {
-        commit('SET_CURSO_DATA', x.data)
-        dispatch('listProfesoresUniversitarios', x.data.universidadID)
+        commit('SET_PROYECTOS_CURSO', x.data.proyectos)
       })
       .catch(() => {})
   },
 
+  selectSeccionCurso({ commit, dispatch }, payload) {
+    this.$axios
+      .get('seccion/select', { params: { id: payload } })
+      .then((x) => {
+        commit('SET_SECCION_CURSO_DATA', x.data.usuarios)
+        // dispatch('listProfesoresUniversitarios', x.data.universidadID)
+      })
+      .catch(() => {})
+  },
+  // APIS EN PRUEBA
   listProfesoresUniversitarios({ commit }, payload) {
     this.$axios
       .get(`Cursos/ListarProfUnive/${payload}`)
@@ -70,19 +104,36 @@ export const actions = {
         // eslint-disable-next-line no-console
         console.log('Error', e)
       })
-  },
-
-  getCurso({ commit }, payload) {
-    this.$axios
-      .get(`Proyectos/ListarCurso/${payload}`)
-      .then((x) => {
-        commit('SET_CURSO_ID', x.data)
-      })
-      .catch(() => {})
   }
 }
 export const getters = {
   notasCursoG: (state) => {
     return state.notasCurso
+  },
+  filterData: (state) => {
+    const proyectos = []
+    const fases = [{ id: '', nombre: 'Todos' }]
+
+    for (let i = 0; i < state.seccionCursoSelected.length; i++) {
+      const element = state.seccionCursoSelected[i]
+      element.kpiProyectos.map((d) => {
+        proyectos.push(d)
+        d.fases.map((p) => {
+          fases.push(p)
+        })
+      })
+    }
+    const hash = {}
+
+    console.log('?=====sss==filterData============', proyectos)
+    console.log('?===================', fases)
+    return {
+      proyectos: proyectos
+        .filter((o) => (hash[o.nombre] ? false : (hash[o.nombre] = true)))
+        .sort((a, b) => (a.id > b.id ? 1 : -1)),
+      fases: fases.filter((o) =>
+        hash[o.nombre] ? false : (hash[o.nombre] = true)
+      )
+    }
   }
 }

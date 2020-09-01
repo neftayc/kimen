@@ -1,10 +1,9 @@
 <template>
   <v-container fluid>
     <v-card flat>
-      <v-toolbar flat class="header-page mb-4">
+      <v-toolbar flat class="header-page">
         <v-toolbar-title>
-          <span class="title">Cursos</span>
-          <div class="subtitle-2 font-weight-light">Lista de Cursos</div>
+          <div class="subtitle-2">Lista de Cursos - Seccion</div>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <div>
@@ -71,6 +70,7 @@ import { mapState } from 'vuex'
 export default {
   async fetch({ store }) {
     await store.dispatch('cursos/listCursos')
+    await store.commit('CHANGE_PAGE_TITLE', 'Cursos')
   },
   data: () => ({
     headerCursos: [
@@ -81,11 +81,26 @@ export default {
         width: 70,
         sortable: false
       },
-      { text: 'Universidad', value: 'universidadNombre' },
-      { text: 'Curso', value: 'nombre' },
-      { text: 'N° Estudiantes', value: 'contJugadores', sortable: false },
-      { text: 'Sección', value: 'seccion', sortable: false },
-      { text: 'Periodo', value: 'periodo' },
+      { text: 'Curso', value: 'nombre', width: 300 },
+      { text: 'Sección', value: 'seccion', sortable: false, width: 200 },
+      {
+        text: 'N° Estudiantes',
+        value: 'contEstudiantes',
+        sortable: false,
+        align: 'center'
+      },
+      {
+        text: 'Fecha Inicio',
+        value: 'fechaInicio',
+        sortable: false,
+        align: 'center'
+      },
+      {
+        text: 'Fecha Fin',
+        value: 'fechaTermino',
+        sortable: false,
+        align: 'center'
+      },
       { text: 'Acciones', value: 'actions', align: 'center', sortable: false }
     ]
   }),
@@ -96,10 +111,10 @@ export default {
   },
   methods: {
     goToDashboard(item) {
-      this.$router.push(`cursos/${item.cursoId}/dashboard`)
+      this.$router.push(`cursos/${item.seccionCursoId}/dashboard`)
     },
     goToConfigurar(item) {
-      this.$router.push(`cursos/${item.cursoId}/configuracion`)
+      this.$router.push(`cursos/${item.seccionCursoId}/configuracion`)
     }
   }
 }

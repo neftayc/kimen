@@ -6,10 +6,10 @@
         contain
         :src="require('@/static/logoKimen.png')"
       ></v-img>
-      <v-card-title class="secodary"> </v-card-title>
+      <v-card-title class="secodary"></v-card-title>
       <v-form ref="form" v-model="valid" autocomplete="off">
         <v-text-field
-          v-model="form.username"
+          v-model="form.email"
           prepend-icon="mdi-account"
           label="Email"
           autocomplete="off"
@@ -24,7 +24,7 @@
           required
           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="show1 = !show1"
-          @keypress.enter="login"
+          @keypress.enter="userLogin"
         ></v-text-field>
         <v-card-actions class="d-flex justify-center px-14">
           <v-btn
@@ -34,10 +34,9 @@
             depressed
             block
             :loading="loading"
-            @click="login"
+            @click="userLogin"
+            >Login</v-btn
           >
-            Login
-          </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -57,18 +56,16 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 export default {
-  middleware: ['login'],
   layout: 'login',
   data: () => ({
     valid: null,
     loading: false,
     show1: true,
     form: {
-      username: '',
+      email: '',
       password: ''
     }
   }),
-
   computed: {
     ...mapState({
       snackbar: (state) => state.snackbar
@@ -84,13 +81,15 @@ export default {
   },
   methods: {
     ...mapMutations(['SHOW_SNACKBAR_STATE']),
-    async login() {
-      this.loading = true
+    async userLogin() {
+      // this.$store.dispatch('cursos/listCursosPrueba')
       try {
-        await this.$store.dispatch('auth/login', this.form)
-        this.$router.push('/kpis')
-      } catch (_) {}
-      this.loading = false
+        await this.$auth.loginWith('local', {
+          data: this.form
+        })
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
