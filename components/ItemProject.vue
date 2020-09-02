@@ -5,6 +5,7 @@
         flat
         width="60px"
         fill-height
+        style="line-height: 1;"
         class="transparent py-3 text-center"
       >
         <v-badge left inline :color="getColor(proyecto.kpiTotal)" dot>
@@ -20,7 +21,7 @@
         }}</small>
       </v-card>
     </div>
-    <div class="text-left" v-if="false">
+    <div v-if="false" class="text-left">
       <div class="text-caption black--text" style="line-height: 1.2;">
         {{ proyecto.nombre }}
       </div>

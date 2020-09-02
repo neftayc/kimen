@@ -26,6 +26,7 @@
               <div style="width: 300px;">
                 <v-text-field
                   id="email"
+                  v-model="email"
                   outlined
                   placeholder="nombre@institucion.edu"
                 ></v-text-field>
@@ -35,6 +36,7 @@
               <label for="">Ingresa tu Email Nuevamente: </label>
               <div style="width: 300px;">
                 <v-text-field
+                  v-model="emailRepeat"
                   outlined
                   placeholder="nombre@institucion.edu"
                 ></v-text-field>
@@ -57,14 +59,24 @@
 <script>
 export default {
   layout: 'validate',
+  async fetch({ store }) {
+    await store.dispatch('auth2/validarEmail', {
+      email: 'rusbel.ccana@gmail.com'
+    })
+  },
   data: () => ({
-    emailvalid: true
+    emailvalid: true,
+    email: '',
+    emailRepeat: ''
   }),
   methods: {
     validarEmail() {
       this.$axios
-        .post('user-validate/')
-        .then((x) => {})
+        .get('usuarios/validaremail/', { params: { email: this.emailRepeat } })
+        .then((x) => {
+          console.log(x)
+          this.emailvalid = true
+        })
         .catch((e) => {
           this.emailvalid = false
         })

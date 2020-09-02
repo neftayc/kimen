@@ -125,6 +125,12 @@
       hide-default-footer
       dense
     >
+      <!--ITEMS DE FASES-->
+      <template v-slot:item.kpiPromedioTotal="{ item }">
+        <v-badge left inline :color="getColor(item.kpiPromedioTotal)" dot>
+          <small>{{ item.kpiPromedioTotal }}%</small>
+        </v-badge>
+      </template>
       <template v-slot:item.fase="{ item }">
         <!--Aqui se debe mostrar el proyecto del estudiante que esta en proceso-->
         <v-list-item
@@ -154,57 +160,367 @@
           </v-list-item-content>
         </v-list-item>
       </template>
-      <template v-slot:item.kpiPromedioTotal="{ item }">
-        <v-badge left inline :color="getColor(item.kpiPromedioTotal)" dot>
-          <small>{{ item.kpiPromedioTotal }}%</small>
-        </v-badge>
-      </template>
-      <!--ITEMS DE FASES-->
       <template v-slot:item.fase_kpi_plazo="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 100 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos
+                .find((x) => selectedProject.id === x.id)
+                .fases.find((d) => d.id === selectedFase.id)
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos
+                      .find((x) => selectedProject.id === x.id)
+                      .fases.find((d) => d.id === selectedFase.id).kpiData
+                      .kpiCostoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiPlazoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                item.kpiProyectos
+                  .find((x) => selectedProject.id === x.id)
+                  .fases.find((d) => d.id === selectedFase.id).kpiData
+                  .kpiPlazoAdquirido
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_kpi_costo="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 45 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos
+                .find((x) => selectedProject.id === x.id)
+                .fases.find((d) => d.id === selectedFase.id)
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos
+                      .find((x) => selectedProject.id === x.id)
+                      .fases.find((d) => d.id === selectedFase.id).kpiData
+                      .kpiCostoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiPlazoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                item.kpiProyectos
+                  .find((x) => selectedProject.id === x.id)
+                  .fases.find((d) => d.id === selectedFase.id).kpiData
+                  .kpiCostoAdquirido
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_kpi_satisfaccion="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 1 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos
+                .find((x) => selectedProject.id === x.id)
+                .fases.find((d) => d.id === selectedFase.id)
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos
+                      .find((x) => selectedProject.id === x.id)
+                      .fases.find((d) => d.id === selectedFase.id).kpiData
+                      .kpiCostoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiPlazoAdquirido +
+                      item.kpiProyectos
+                        .find((x) => selectedProject.id === x.id)
+                        .fases.find((d) => d.id === selectedFase.id).kpiData
+                        .kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                item.kpiProyectos
+                  .find((x) => selectedProject.id === x.id)
+                  .fases.find((d) => d.id === selectedFase.id).kpiData
+                  .kpiSatisfaccionAdquirido
+              "
+            />
+          </div>
+        </div>
       </template>
       <!--FASES-->
       <template v-slot:item.fase_1="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 56 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                .fases[0]
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[0].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[0].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[0].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[0].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[0].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[0].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_2="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 56 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                .fases[1]
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[1].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[1].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[1].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[1].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[1].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[1].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_3="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 56 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                .fases[2]
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[2].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[2].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[2].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[2].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[2].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[2].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_4="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 56 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                .fases[3]
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[3].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[3].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[3].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[3].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[3].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[3].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.fase_5="{ item }">
-        <v-badge left inline :color="getColor(item.kpiT1)" dot>
-          <small>{{ 56 }}%</small>
-        </v-badge>
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                .fases[4]
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[4].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[4].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[4].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+              :kpi="
+                parseInt(
+                  (
+                    (item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                      .fases[4].kpiData.kpiCostoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[4].kpiData.kpiPlazoAdquirido +
+                      item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                        .fases[4].kpiData.kpiSatisfaccionAdquirido) /
+                    3
+                  ).toFixed()
+                )
+              "
+            />
+          </div>
+        </div>
       </template>
       <template v-slot:item.faseKPITotal="{ item }">
-        <div class="text-right">
-          <v-badge left inline :color="getColor(item.kpiT1)" dot>
-            <small>{{ 56 }}%</small>
+        <div
+          v-if="
+            item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+              .length
+          "
+        >
+          <v-badge
+            left
+            inline
+            :color="
+              getColor(
+                item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                  .kpiTotal
+              )
+            "
+            dot
+          >
+            <small
+              >{{
+                item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                  .kpiTotal
+              }}%</small
+            >
           </v-badge>
         </div>
       </template>
@@ -245,7 +561,7 @@
           :proyecto="item.kpiProyectos.length ? item.kpiProyectos[6] : {}"
         />
       </template>
-      <!--other datos-->
+      <!--Other datos-->
       <template v-slot:item.proyecto="{ item }">
         <!--Aqui se debe mostrar el proyecto del estudiante que esta en proceso-->
         <v-list-item class="px-0">
@@ -286,64 +602,37 @@
         </v-list-item>
       </template>
       <template v-slot:item.proyecto_kpi_plazo="{ item }">
-        <v-badge
-          left
-          inline
-          :color="
-            getColor(
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            )
+        <ItemProjectKPI
+          :kpi-total="selectedProject.kpiTotal"
+          :kpi="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiProyecto.kpiPlazoAdquirido
+              : 0
           "
-          dot
-        >
-          <small>
-            {{
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            }}%
-          </small>
-        </v-badge>
+        />
       </template>
       <template v-slot:item.proyecto_kpi_costo="{ item }">
-        <v-badge
-          left
-          inline
-          :color="
-            getColor(
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            )
+        <ItemProjectKPI
+          :kpi-total="selectedProject.kpiTotal"
+          :kpi="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiProyecto.kpiCostoAdquirido
+              : 0
           "
-          dot
-        >
-          <small
-            >{{
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            }}%</small
-          >
-        </v-badge>
+        />
       </template>
       <template v-slot:item.proyecto_kpi_satisfaccion="{ item }">
-        <v-badge
-          left
-          inline
-          :color="
-            getColor(
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            )
+        <ItemProjectKPI
+          :kpi-total="selectedProject.kpiTotal"
+          :kpi="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiProyecto.kpiSatisfaccionAdquirido
+              : 0
           "
-          dot
-        >
-          <small
-            >{{
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            }}%</small
-          >
-        </v-badge>
+        />
       </template>
       <template v-slot:item.proyectoKPITotal="{ item }">
         <v-badge
@@ -365,7 +654,7 @@
           >
         </v-badge>
       </template>
-
+      <!--Actions-->
       <template v-slot:item.actions="{ item }">
         <v-tooltip top color="grey darken-2">
           <template v-slot:activator="{ on }">
@@ -391,8 +680,9 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import ItemProject from '@/components/ItemProject'
+import ItemProjectKPI from '@/components/ItemProjectKPI'
 export default {
-  component: { ItemProject },
+  components: { ItemProject, ItemProjectKPI },
   async fetch({ store, params }) {
     // await store.dispatch('jugadores/listProyectosCurso', params.idCurso)
     await store.dispatch('cursos/getCurso', params.idCurso)
@@ -620,12 +910,17 @@ export default {
     }
   },
   watch: {
-    showProyectos() {
-      this.selectedProject = JSON.parse(
-        JSON.stringify(
-          this.$store.state.cursos.seccionCursoSelected[0].kpiProyectos[0]
+    showProyectos(v) {
+      if (v) {
+        this.selectedProject = JSON.parse(
+          JSON.stringify(
+            this.$store.state.cursos.seccionCursoSelected[0].kpiProyectos[0]
+          )
         )
-      )
+      } else {
+        this.showFases = false
+        this.selectedFase = {}
+      }
     },
     showFases(v) {
       if (v) {
@@ -716,7 +1011,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss">
 .curso-table-proyectos.curso-table {
   table thead th {

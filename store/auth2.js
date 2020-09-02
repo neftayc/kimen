@@ -1,17 +1,20 @@
 export const state = () => ({
   isAuthenticated: false,
-  user: null
+  user: null,
+  emailValidado: ''
 })
 
 export const mutations = {
   set(state, user) {
     state.isAuthenticated = !!user
     state.user = user
+  },
+  SET_EMAIL_VALID(state, payload) {
+    state.emailValidado = payload
   }
 }
 const TOKEN_AUTH_USERNAME = 'Clave Personalizada'
 const TOKEN_AUTH_PASSWORD = 'Clave Personalizada'
-const Cookie = process.client ? require('js-cookie') : undefined
 
 export const actions = {
   login({ commit }, { username, password }) {
@@ -35,43 +38,14 @@ export const actions = {
       })
       .catch(() => {})
   },
-
-  loginP({ commit }, { username, password }) {
+  validarEmail({ commit }, payload) {
     this.$axios
-      .post(
-        'Usuarios/login/',
-        { email: username, password },
-        {
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Access-Control-Allow-Origin': '*',
-            Authorization:
-              'Basic ' + btoa(TOKEN_AUTH_USERNAME + ':' + TOKEN_AUTH_PASSWORD)
-          }
-        }
-      )
+      .get('usuarios/validaremail/', { params: payload })
       .then((x) => {
-        console.log('x.dtaa', x)
-        const auth = {
-          accessToken: x.data.token
-        }
-        commit('setAuth', auth, { root: true }) // mutating to store for client rendering
-        this.$router.push('/')
-        Cookie.set('auth', auth) // saving token in cookie for server rendering
-        commit(
-          'SHOW_SNACKBAR',
-          { color: 'success', message: 'Bienvenido' },
-          { root: true }
-        )
+        commit('SET_EMAIL_VALID', x)
       })
-      .catch((e) => {
-        // Se tiene que mejorar el mensaje de retorno
-        console.log(e)
-        commit(
-          'SHOW_SNACKBAR',
-          { color: 'error', message: 'Usuario o Contraseña Incorrecta' },
-          { root: true }
-        )
+      .catch((err) => {
+        console.log(err)
       })
   }
 }

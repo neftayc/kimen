@@ -125,8 +125,6 @@ export const getters = {
     }
     const hash = {}
 
-    console.log('?=====sss==filterData============', proyectos)
-    console.log('?===================', fases)
     return {
       proyectos: proyectos
         .filter((o) => (hash[o.nombre] ? false : (hash[o.nombre] = true)))

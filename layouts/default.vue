@@ -50,7 +50,7 @@
       </v-list>
       <v-list>
         <v-divider class="mb-6"></v-divider>
-        <template v-for="(item, i) in menuItems">
+        <template v-for="(item, i) in menuUser">
           <v-list-item
             v-if="!item.menu_items"
             :key="'menu-' + i"
@@ -191,16 +191,19 @@ export default {
       fixed: false,
       menuItems: [
         {
+          id: 1,
           icon: 'mdi-text-box-multiple',
           title: 'Cursos',
           to: '/cursos'
         },
         {
+          id: 2,
           icon: 'mdi-account-group-outline',
           title: 'Estudiantes',
           to: '/estudiantes'
         },
         {
+          id: 3,
           icon: 'mdi-cogs',
           title: 'Configuracion',
           to: '',
@@ -230,6 +233,31 @@ export default {
       titlePage: (state) => state.titlePage,
       userInfo: (state) => (state.auth ? state.auth.user : {})
     }),
+    menuUser() {
+      // === Usuarios DEL SISTEMA KIMEN ===
+      // AdminKimen=0
+      // Profesor=2
+      // Estdiante=3
+      // AdminInstitucion=1
+      // Dev=4
+      // BetaTester=5
+      switch (this.userInfo.rol) {
+        case 'ADMINKIMEN':
+          return this.menuItems
+        case 'ADMININSTITUCION':
+          return this.menuItems
+        case 'PROFESOR':
+          return this.menuItems.filter((x) => x.id !== 3)
+        case 'ESTUDIANTE':
+          return []
+        case 'DEV':
+          return []
+        case 'BETATESTER':
+          return []
+        default:
+          return []
+      }
+    },
     input_snackbar: {
       get() {
         return this.$store.state.snackbar.state

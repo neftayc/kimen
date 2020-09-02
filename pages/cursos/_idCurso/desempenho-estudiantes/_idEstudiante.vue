@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="EstudianteSeleccionado.kpiProyectos" fluid>
     <v-card class="pa-6">
       <div class="d-flex justify-space-between">
         <div>
@@ -32,25 +32,57 @@
         dense
       >
         <template v-slot:item.nombre="{ item }">
-          <span class="text-caption">{{ item.nombre }}</span>
+          <div style="line-height: 1;" class="py-1">
+            <span
+              style="line-height: 1.1;"
+              class="d-block text-caption font-weight-medium"
+            >
+              {{ item.nombre }}
+            </span>
+            <small class="grey--text">{{ item.tipoProyecto }}</small>
+          </div>
         </template>
         <template v-slot:item.kpiCrono="{ item }">
-          <v-badge left inline :color="getColor(item.kpiCrono)" dot>
-            <span>{{ item.kpiCrono }}%</span>
+          <v-badge
+            v-if="item.kpiProyecto.kpiPlazoAdquirido"
+            left
+            inline
+            :color="getColor(item.kpiProyecto.kpiPlazoAdquirido)"
+            dot
+          >
+            <span>{{ item.kpiProyecto.kpiPlazoAdquirido }}%</span>
           </v-badge>
         </template>
         <template v-slot:item.kpiCosto="{ item }">
-          <v-badge left inline :color="getColor(item.kpiCosto)" dot>
-            <span>{{ item.kpiCosto }}%</span>
+          <v-badge
+            v-if="item.kpiProyecto.kpiCostoAdquirido"
+            left
+            inline
+            :color="getColor(item.kpiProyecto.kpiCostoAdquirido)"
+            dot
+          >
+            <span>{{ item.kpiProyecto.kpiCostoAdquirido }}%</span>
           </v-badge>
         </template>
         <template v-slot:item.kpiSatis="{ item }">
-          <v-badge left inline :color="getColor(item.kpiSatis)" dot>
-            <span>{{ item.kpiSatis }}%</span>
+          <v-badge
+            v-if="item.kpiProyecto.kpiSatisfaccionAdquirido"
+            left
+            inline
+            :color="getColor(item.kpiProyecto.kpiSatisfaccionAdquirido)"
+            dot
+          >
+            <span>{{ item.kpiProyecto.kpiSatisfaccionAdquirido }}%</span>
           </v-badge>
         </template>
         <template v-slot:item.kpiTotal="{ item }">
-          <v-badge left inline :color="getColor(item.kpiTotal)" dot>
+          <v-badge
+            v-if="item.kpiTotal"
+            left
+            inline
+            :color="getColor(item.kpiTotal)"
+            dot
+          >
             <span>{{ item.kpiTotal }}%</span>
           </v-badge>
         </template>
@@ -90,18 +122,23 @@
         class="curso-table table-summary mt-11"
         dense
       >
-        <template v-slot:item.nombre="{ item }">
-          <span class="title">{{ item.nombre }}</span>
+        <template v-slot:item.nombre>
+          <span class="title">Total</span>
         </template>
 
-        <template v-slot:item.kpiTotal="{ item }">
-          <v-badge left inline :color="getColor(item.kpiTotal)" dot>
-            <span>{{ item.kpiTotal }}%</span>
+        <template v-slot:item.kpiTotal>
+          <v-badge
+            left
+            inline
+            :color="getColor(EstudianteSeleccionado.kpiPromedioTotal)"
+            dot
+          >
+            <span>{{ EstudianteSeleccionado.kpiPromedioTotal }}%</span>
           </v-badge>
         </template>
 
-        <template v-slot:item.tiempoFinal="{ item }">
-          <span>{{ getTime(item.tiempoJuegoSegundos) }}</span>
+        <template v-slot:item.tiempoFinal>
+          <span>{{ getTotalTime() }}</span>
         </template>
       </v-data-table>
     </v-card>
@@ -188,6 +225,14 @@ export default {
       const second = time % 60
       const secondTemp = second < 10 ? '0' + second : second
       return hourTemp + ':' + minuteTemp + ':' + secondTemp
+    },
+    getTotalTime() {
+      const time = this.EstudianteSeleccionado.kpiProyectos.reduce(
+        (x, y) => x + y.tiempoTotalSegundos,
+        0
+      )
+      console.log('===', time)
+      return this.getTime(time)
     }
   }
 }

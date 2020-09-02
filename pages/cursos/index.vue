@@ -15,7 +15,6 @@
           ></v-text-field>
         </div>
       </v-toolbar>
-
       <v-card tile elevation="6">
         <v-data-table
           class="curso-table"

@@ -36,7 +36,7 @@ module.exports = {
         code: 100
       }
     ],
-    'max-lines': ['error', { skipComments: true, max: 1000 }],
+    'max-lines': ['error', { skipComments: true, max: 1500 }],
     'max-lines-per-function': ['error', 200],
     'no-trailing-spaces': 2,
     'no-underscore-dangle': 2,

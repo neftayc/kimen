@@ -9,9 +9,8 @@
               x-large
               v-on="on"
               @click="$router.go(-1)"
+              >mdi-arrow-left-circle</v-icon
             >
-              mdi-arrow-left-circle
-            </v-icon>
           </template>
           <span>Regresar</span>
         </v-tooltip>
@@ -72,27 +71,39 @@
       :items="proyectoList"
       hide-default-footer
     >
-      <template v-slot:item.notaPonderada="{ item }">
-        <span>{{ item.notaPonderada }}%</span>
-      </template>
       <template v-slot:item.estado="{ item }">
         <v-chip small color="primary" outlined class="font-weight-bold">
-          {{ item.estado }}
+          {{ item.finalizado ? 'Finalizado' : 'En proceso' }}
         </v-chip>
       </template>
       <template v-slot:item.kpiCrono="{ item }">
-        <v-badge left inline :color="getColor(item.kpiCrono)" dot>
-          <span>{{ item.kpiCrono }}%</span>
+        <v-badge
+          left
+          inline
+          :color="getColor(item.kpiProyecto.kpiPlazoAdquirido)"
+          dot
+        >
+          <span>{{ item.kpiProyecto.kpiPlazoAdquirido }}%</span>
         </v-badge>
       </template>
       <template v-slot:item.kpiCosto="{ item }">
-        <v-badge left inline :color="getColor(item.kpiCosto)" dot>
-          <span>{{ item.kpiCosto }}%</span>
+        <v-badge
+          left
+          inline
+          :color="getColor(item.kpiProyecto.kpiCostoAdquirido)"
+          dot
+        >
+          <span>{{ item.kpiProyecto.kpiCostoAdquirido }}%</span>
         </v-badge>
       </template>
       <template v-slot:item.kpiSatisfaccion="{ item }">
-        <v-badge left inline :color="getColor(item.kpiSatisfaccion)" dot>
-          <span>{{ item.kpiSatisfaccion }}%</span>
+        <v-badge
+          left
+          inline
+          :color="getColor(item.kpiProyecto.kpiSatisfaccionAdquirido)"
+          dot
+        >
+          <span>{{ item.kpiProyecto.kpiSatisfaccionAdquirido }}%</span>
         </v-badge>
       </template>
       <template v-slot:item.kpiTotal="{ item }">
@@ -100,8 +111,8 @@
           <span>{{ item.kpiTotal }}%</span>
         </v-badge>
       </template>
-      <template v-slot:item.tiempoTotal="{ item }">
-        <span>{{ getTime(item.tiempoTotal) }}</span>
+      <template v-slot:item.tiempoTotalSegundos="{ item }">
+        <span>{{ getTime(item.tiempoTotalSegundos) }}</span>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-tooltip top color="grey darken-2">
@@ -157,7 +168,7 @@ export default {
     headerCurso: [
       {
         text: 'Id',
-        value: 'cursoId',
+        value: 'seccionCursoId',
         align: 'center',
         width: 70,
         sortable: false
@@ -184,32 +195,17 @@ export default {
       },
       { text: 'Acciones', value: 'actions', align: 'center', sortable: false }
     ],
+
     headerProyectos: [
-      { text: 'Proyectos', value: 'nombreProyecto', sortable: false },
-      /*
-      {
-        text: 'Ponderación de Nota Final',
-        value: 'notaPonderada',
-        sortable: false,
-        align: 'center',
-        width: 150
-      }, */
+      { text: 'Proyectos', value: 'nombre', sortable: false },
       { text: 'Estado Proyecto', value: 'estado', sortable: false },
       {
         text: 'Alumnos que Finalizarón',
-        value: 'alumnosFinalizaron',
+        value: 'contEstudiantesFinalizados',
         sortable: false,
         align: 'center',
         width: 150
       },
-      /*
-      {
-        text: '# Estudiantes Aprobados',
-        value: 'catnAprueban',
-        sortable: false,
-        align: 'center',
-        width: 150
-      }, */
       {
         text: 'KPI Plazo',
         value: 'kpiCrono',
@@ -236,16 +232,10 @@ export default {
       },
       {
         text: 'Tiempo Juego',
-        value: 'tiempoTotal',
+        value: 'tiempoTotalSegundos',
         sortable: false,
         align: 'center'
       }
-      /* {
-        text: 'Nota Promedio',
-        value: 'notaProm',
-        sortable: false,
-        align: 'center'
-      } */
     ]
   }),
   computed: {
