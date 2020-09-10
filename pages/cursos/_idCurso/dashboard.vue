@@ -197,6 +197,7 @@ export default {
     ],
 
     headerProyectos: [
+      { text: 'Id', value: 'id', sortable: false, align: 'center' },
       { text: 'Proyectos', value: 'nombre', sortable: false },
       { text: 'Estado Proyecto', value: 'estado', sortable: false },
       {

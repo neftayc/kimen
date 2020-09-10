@@ -1,11 +1,17 @@
 <template>
   <v-container v-if="EstudianteSeleccionado.kpiProyectos" fluid>
-    <v-card class="pa-6">
+    <v-card class="pa-1" flat tile>
       <div class="d-flex justify-space-between">
         <div>
-          <h2 class="title">Desempeño Individual</h2>
-          <p>
-            Detalle de Estudiante: {{ EstudianteSeleccionado.nombreApellido }}
+          <p class="font-weight-medium">
+            Detalle del Estudiante: {{ EstudianteSeleccionado.nombreApellido }}
+          </p>
+          <div class="text-subtitle-1">
+            <strong>Curso:</strong> {{ cursoSeleccionado.nombre }} -
+            {{ cursoSeleccionado.seccion }}
+          </div>
+          <p class="text-caption grey--text text--darken-2">
+            {{ cursoSeleccionado.descripcion }}
           </p>
         </div>
         <div>
@@ -37,14 +43,24 @@
               style="line-height: 1.1;"
               class="d-block text-caption font-weight-medium"
             >
-              {{ item.nombre }}
+              {{ item.id }} - {{ item.nombre }}
             </span>
             <small class="grey--text">{{ item.tipoProyecto }}</small>
           </div>
         </template>
+        <template v-slot:item.estado="{ item }">
+          <v-chip
+            small
+            :color="item.finalizado ? 'grey' : 'primary'"
+            outlined
+            class="font-weight-bold"
+          >
+            {{ item.finalizado ? 'Finalizado' : 'En proceso' }}
+          </v-chip>
+        </template>
         <template v-slot:item.kpiCrono="{ item }">
           <v-badge
-            v-if="item.kpiProyecto.kpiPlazoAdquirido"
+            v-if="!item.finalizado ? item.kpiProyecto.kpiPlazoAdquirido : true"
             left
             inline
             :color="getColor(item.kpiProyecto.kpiPlazoAdquirido)"
@@ -55,7 +71,7 @@
         </template>
         <template v-slot:item.kpiCosto="{ item }">
           <v-badge
-            v-if="item.kpiProyecto.kpiCostoAdquirido"
+            v-if="!item.finalizado ? item.kpiProyecto.kpiCostoAdquirido : true"
             left
             inline
             :color="getColor(item.kpiProyecto.kpiCostoAdquirido)"
@@ -66,7 +82,11 @@
         </template>
         <template v-slot:item.kpiSatis="{ item }">
           <v-badge
-            v-if="item.kpiProyecto.kpiSatisfaccionAdquirido"
+            v-if="
+              !item.finalizado
+                ? item.kpiProyecto.kpiSatisfaccionAdquirido
+                : true
+            "
             left
             inline
             :color="getColor(item.kpiProyecto.kpiSatisfaccionAdquirido)"
@@ -77,7 +97,7 @@
         </template>
         <template v-slot:item.kpiTotal="{ item }">
           <v-badge
-            v-if="item.kpiTotal"
+            v-if="!item.finalizado ? item.kpiTotal : true"
             left
             inline
             :color="getColor(item.kpiTotal)"
@@ -150,6 +170,8 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   async fetch({ store, params }) {
+    await store.dispatch('cursos/getCurso', params.idCurso)
+
     await store.dispatch('cursos/selectSeccionCurso', params.idCurso)
     await store.commit('CHANGE_PAGE_TITLE', 'Curso - Desempeño Individual')
   },
@@ -157,12 +179,13 @@ export default {
   data: () => ({
     headerProyectosJugador: [
       { text: '', value: 'nombre', sortable: false },
-      /* {
-        text: 'Ponderación',
-        value: 'ponderacion',
+      {
+        text: 'Estado',
+        value: 'estado',
         sortable: false,
+        width: 100,
         align: 'center'
-      }, */
+      },
       {
         text: 'KPI Cronograma',
         value: 'kpiCrono',
@@ -199,7 +222,9 @@ export default {
     ]
   }),
   computed: {
-    ...mapState({}),
+    ...mapState({
+      cursoSeleccionado: (state) => state.cursos.cursoSeleccionado
+    }),
     ...mapGetters('jugadores', ['resumen', 'jugadorData']),
     EstudianteSeleccionado() {
       const d = this.$store.state.cursos.seccionCursoSelected.find(

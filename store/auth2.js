@@ -1,7 +1,8 @@
 export const state = () => ({
   isAuthenticated: false,
   user: null,
-  emailValidado: ''
+  emailValidado: '',
+  datosValidacion: {}
 })
 
 export const mutations = {
@@ -11,6 +12,9 @@ export const mutations = {
   },
   SET_EMAIL_VALID(state, payload) {
     state.emailValidado = payload
+  },
+  SET_DATOS_VALIDACION(state, payload) {
+    state.datosValidacion = payload
   }
 }
 const TOKEN_AUTH_USERNAME = 'Clave Personalizada'

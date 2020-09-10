@@ -8,7 +8,8 @@
               Cambiar Contraseña
             </h2>
             <span>
-              ¡Bienvenido a Kimen! La institución NOMBRE_INSTITUCION tiene una
+              ¡Bienvenido a Kimen! La institución
+              <strong>{{ datosValidacion.nombreInstitucion }}</strong> tiene una
               cuenta de usuario Kimen habilitada para tu uso personal. Debes
               crear una contraseña personal e intransferible, que te permitirá
               jugar y aprender con Kimen PM.
@@ -17,7 +18,17 @@
             <br />
             <span>
               Actualmente estás registrado en los siguientes cursos:
-              <strong>PM-0001, EP-0002</strong>
+              <strong>
+                <v-chip
+                  v-for="(curso, i) in datosValidacion.listaCursos"
+                  :key="i"
+                  x-small
+                  label
+                  class="mr-2"
+                >
+                  {{ curso }}
+                </v-chip>
+              </strong>
             </span>
           </v-col>
           <v-col cols="12" sm="9">
@@ -27,6 +38,7 @@
               </label>
               <div style="width: 50%;">
                 <v-text-field
+                  v-model="password"
                   id="password"
                   type="password"
                   outlined
@@ -40,6 +52,7 @@
               </label>
               <div style="width: 50%;">
                 <v-text-field
+                  v-model="newPassword"
                   id="password-new"
                   type="password"
                   outlined
@@ -54,8 +67,9 @@
                 large
                 class="px-11"
                 @click="changePassword()"
-                >Aceptar</v-btn
               >
+                Aceptar
+              </v-btn>
             </div>
           </v-col>
           <v-col cols="12" sm="3">
@@ -70,16 +84,31 @@
   </v-row>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   layout: 'validate',
+
   data: () => ({
-    emailvalid: true
+    emailvalid: true,
+    password: '',
+    newPassword: ''
   }),
+  computed: {
+    ...mapState({ datosValidacion: (state) => state.auth2.datosValidacion })
+  },
   methods: {
     changePassword() {
       this.$axios
-        .post('user-change-password/')
-        .then((x) => {})
+        .post('usuarios/crearPassword', {
+          Id: this.datosValidacion.id,
+          Password: this.password
+        })
+        .then((x) => {
+          console.log('====================================')
+          console.log(x.data)
+          console.log('====================================')
+        })
         .catch((e) => {
           this.emailvalid = false
         })

@@ -30,7 +30,7 @@ export default {
     getColor(x) {
       if (x >= 85) return '#2BBE21'
       else if (x >= 60 && x < 85) return '#ffdf00'
-      else if (x < 60 && this.kpiTotal !== 0) return '#D62D2D'
+      else if (x < 60 && this.estado ? true : this.kpiTotal) return '#D62D2D'
       else return 'grey'
     }
   }

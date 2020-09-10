@@ -29,7 +29,9 @@
               :min-width="0"
               color="primary"
               v-on="on"
-              @click="modalForm = true"
+              @click="
+                CHANGE_STATE_DIALOG({ code: 'dialogCursoSeccion', value: true })
+              "
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -101,25 +103,87 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-row justify="center">
+      <v-dialog v-model="dialogCursoSeccion" persistent :max-width="600">
+        <v-card>
+          <v-card-title class="primary darken-2 white--text">
+            Añadir Curso Sección
+          </v-card-title>
+          <v-container fluid class="px-8">
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="Curso.nombre"
+                  label="Nombre"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="Curso.descripcion"
+                  label="Descripción"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="Curso.codigoInterno"
+                  label="Código"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="Curso.area"
+                  label="Área"
+                  outlined
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <div class="d-flex justify-center">
+              <v-btn color="primary darken-1" class="mx-1" @click="saveCurso()">
+                <span class="text-capitalice">Guardar</span>
+              </v-btn>
+              <v-btn
+                color="secondary"
+                class="mx-1"
+                @click="
+                  CHANGE_STATE_DIALOG({ code: 'dialogCurso', value: false })
+                  Curso = {}
+                "
+              >
+                <span class="text-capitalice">Cancelar</span>
+              </v-btn>
+            </div>
+          </v-container>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 
 export default {
+  async fetch({ store }) {
+    await store.dispatch('configuracion/listarCursos')
+    await store.commit('CHANGE_PAGE_TITLE', 'Configuración - Sección Curso')
+  },
   data: () => ({
+    Curso: {},
     headerSeccion: [
       {
         text: 'Código Sección Curso',
-        value: 'codigo',
+        value: 'idInterno',
         sortable: false,
         align: 'center',
         width: 150
       },
-      { text: 'Descripción', value: 'description', sortable: false },
-      { text: 'Fecha Inicio', value: 'start_date', sortable: false },
-      { text: 'Fecha Fin', value: 'end_date', sortable: false },
+      { text: 'Descripción', value: 'descripcion', sortable: false },
+      { text: 'Fecha Inicio', value: 'fechaInicio', sortable: false },
+      { text: 'Fecha Fin', value: 'fechaTermino', sortable: false },
       { text: 'Comentarios', value: 'comment', sortable: false, width: 250 },
       {
         text: 'Estado',
@@ -140,10 +204,14 @@ export default {
   computed: {
     ...mapState({
       cursoData: (state) => state.configuracion.cursoData,
-      listaSecciones: (state) => state.configuracion.listaSecciones
-    })
+      listaSecciones: (state) =>
+        JSON.parse(JSON.stringify(state.configuracion.listaCursos))
+    }),
+    ...mapGetters('configuracion', ['dialogCursoSeccion'])
   },
   methods: {
+    ...mapMutations('configuracion', ['CHANGE_STATE_DIALOG']),
+    ...mapActions('configuracion', ['saveCursoSeccion']),
     cambiarEstado(item) {},
     editarSeccion(item) {},
     deleteSeccion(item) {}

@@ -9,15 +9,17 @@
         class="transparent py-3 text-center"
       >
         <v-badge left inline :color="getColor(proyecto.kpiTotal)" dot>
-          <small v-if="proyecto.kpiTotal !== 0">{{ proyecto.kpiTotal }}%</small>
+          <small v-if="!proyecto.finalizado ? proyecto.kpiTotal !== 0 : true">
+            {{ proyecto.kpiTotal }}%
+          </small>
         </v-badge>
         <br />
         <small>{{
-          proyecto.kpiTotal !== 0
-            ? proyecto.finalizado
-              ? 'Finalizado'
+          !proyecto.finalizado
+            ? proyecto.kpiTotal === 0
+              ? 'En espera'
               : 'En proceso'
-            : 'En espera'
+            : 'Finalizado'
         }}</small>
       </v-card>
     </div>
@@ -53,7 +55,7 @@ export default {
     getColor(x) {
       if (x >= 85) return '#2BBE21'
       else if (x >= 60 && x < 85) return '#ffdf00'
-      else if (x < 60 && this.proyecto.kpiTotal !== 0) return '#D62D2D'
+      else if (x < 60 && this.proyecto.finalizado) return '#D62D2D'
       else return 'grey'
     }
   }

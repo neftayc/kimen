@@ -7,10 +7,12 @@
         <div>
           <v-list-item>
             <v-list-item-avatar tile class="ma-0">
-              <v-img :src="require('@/static/v.png')" />
+              <v-img :src="datosValidacion.nombreInstitucion" />
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>Universidad UPM</v-list-item-title>
+              <v-list-item-title>{{
+                datosValidacion.nombreInstitucion
+              }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </div>
@@ -21,22 +23,39 @@
     </v-main>
 
     <v-snackbar
-      v-model="$store.state.snackbar.state"
-      top="true,"
-      right="true,"
-      :color="$store.state.snackbar.type"
-      multi-line="true"
+      v-model="input_snackbar"
+      :bottom="snackbar.y === 'bottom'"
+      :left="snackbar.x === 'left'"
+      :right="snackbar.x === 'right'"
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      :top="snackbar.y === 'top'"
+      >{{ snackbar.message }}</v-snackbar
     >
-      <span v-html="$store.state.snackbar.message"></span>
-      <v-btn color="accent" text @click="$store.state.snackbar.state = false">
-        Close
-      </v-btn>
-    </v-snackbar>
   </v-app>
 </template>
 <script>
+import { mapState } from 'vuex'
+
 export default {
   // middleware: ['auth']
+
+  middleware: ['email-validado'],
+  computed: {
+    ...mapState({
+      snackbar: (state) => state.snackbar,
+      datosValidacion: (state) => state.auth2.datosValidacion
+    }),
+
+    input_snackbar: {
+      get() {
+        return this.$store.state.snackbar.state
+      },
+      set(value) {
+        this.$store.commit('SHOW_SNACKBAR_STATE', value)
+      }
+    }
+  }
 }
 </script>
 <style lang="scss">

@@ -4,19 +4,14 @@ export const state = () => ({
   seccionCursoSelected: [],
   profesoresUniversitarios: [],
   notasCurso: {},
-  cursoSeleccionado: {}
+  cursoSeleccionado: {},
+  loadingCursos: false
 })
 export const mutations = {
   SET_LIST_CURSOS(state, payload) {
     state.cursosData = payload
   },
   SELECTED_CURSO(state, payload) {
-    console.log(payload)
-    console.log(state.cursosData)
-    console.log(
-      state.cursosData.find((x) => x.seccionCursoId === parseInt(payload))
-    )
-
     state.cursoSeleccionado = state.cursosData.find(
       (x) => x.seccionCursoId === parseInt(payload)
     )
@@ -37,6 +32,9 @@ export const mutations = {
   },
   UPDATE_NOTAS(state, payload) {
     state.notasCurso = payload
+  },
+  CHANGE_LOADING(state, payload) {
+    state.loadingCursos = payload
   }
 }
 export const actions = {
@@ -44,6 +42,8 @@ export const actions = {
     await dispatch('listCursos', payload)
   },
   listCursos({ commit, rootState }, payload) {
+    commit('CHANGE_LOADING', true)
+    commit('SET_LIST_CURSOS', [])
     this.$axios
       .get('cursos/listar', {
         params: {
@@ -52,18 +52,21 @@ export const actions = {
         }
       })
       .then(async (x) => {
+        commit('CHANGE_LOADING', false)
         await commit('SET_LIST_CURSOS', x.data)
         if (payload) {
           await commit('SELECTED_CURSO', payload)
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        commit('CHANGE_LOADING', false)
+      })
   },
   getProyectosCurso({ commit }, payload) {
     this.$axios
       .get('seccion/proyectos/listar', { params: { id: payload } })
       .then((x) => {
-        commit('SET_PROYECTOS_CURSO', x.data.proyectos)
+        commit('SET_PROYECTOS_CURSO', x.data)
       })
       .catch(() => {})
   },
@@ -76,34 +79,6 @@ export const actions = {
         // dispatch('listProfesoresUniversitarios', x.data.universidadID)
       })
       .catch(() => {})
-  },
-  // APIS EN PRUEBA
-  listProfesoresUniversitarios({ commit }, payload) {
-    this.$axios
-      .get(`Cursos/ListarProfUnive/${payload}`)
-      .then((x) => {
-        commit('SET_PROFESORES_UNIVERSITARIOS', x.data)
-      })
-      .catch(() => {})
-  },
-  listNotas({ commit }, payload) {
-    return this.$axios
-      .get(`Cursos/ListarNotas/${payload}`)
-      .then((x) => {
-        commit('SET_LISTAR_NOTAS', x.data)
-      })
-      .catch(() => {})
-  },
-  updateNotas({ commit }, payload) {
-    this.$axios
-      .put('Cursos/ModNotas', payload)
-      .then((x) => {
-        commit('UPDATE_NOTAS', x.data)
-      })
-      .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.log('Error', e)
-      })
   }
 }
 export const getters = {
@@ -133,5 +108,6 @@ export const getters = {
         hash[o.nombre] ? false : (hash[o.nombre] = true)
       )
     }
-  }
+  },
+  loading: (state) => state.loadingCursos
 }

@@ -73,12 +73,22 @@ export default {
     validarEmail() {
       this.$axios
         .get('usuarios/validaremail/', { params: { email: this.emailRepeat } })
-        .then((x) => {
-          console.log(x)
+        .then(async (x) => {
           this.emailvalid = true
+          await this.$store.commit('SHOW_SNACKBAR', {
+            color: 'success',
+            message: x.trace
+          })
+          await this.$store.commit('auth2/SET_DATOS_VALIDACION', x.data)
+          await this.$router.push('/account/password')
         })
         .catch((e) => {
+          this.$store.commit('SHOW_SNACKBAR', {
+            color: 'error',
+            message: e.response ? e.response.data.trace : e
+          })
           this.emailvalid = false
+          // this.$router.push('/account/password')
         })
     }
   }

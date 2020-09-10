@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   async fetch({ store }) {
     await store.dispatch('cursos/listCursos')
@@ -106,7 +106,8 @@ export default {
   computed: {
     ...mapState({
       cursosData: (state) => state.cursos.cursosData
-    })
+    }),
+    ...mapGetters('cursos', ['loading'])
   },
   methods: {
     goToDashboard(item) {

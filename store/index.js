@@ -32,6 +32,9 @@ export const mutations = {
   },
   CHANGE_PAGE_TITLE(state, payload) {
     state.titlePage = payload
+  },
+  LOGOUT_USER(state, payload) {
+    state.auth = ''
   }
 }
 export const actions = {}

@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+    {{ dialogCurso }}
     <v-card>
       <v-toolbar flat color="white">
         <v-toolbar-title>Gestión de Cursos</v-toolbar-title>
@@ -14,12 +15,15 @@
               :min-width="0"
               color="primary"
               v-on="on"
-              @click="modalForm = true"
+              @click="
+                CHANGE_STATE_DIALOG({ code: 'dialogCurso', value: true })
+                Curso = {}
+              "
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>Anadir Curso</span>
+          <span>Añadir Curso</span>
         </v-tooltip>
       </v-toolbar>
       <v-divider></v-divider>
@@ -106,7 +110,7 @@
       </v-data-table>
     </v-card>
     <v-row justify="center">
-      <v-dialog v-model="modalForm" persistent :max-width="600">
+      <v-dialog v-model="dialogCurso" persistent :max-width="600">
         <v-card>
           <v-card-title class="primary darken-2 white--text"
             >Añadir Curso</v-card-title
@@ -115,21 +119,21 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="Curso.name"
+                  v-model="Curso.nombre"
                   label="Nombre"
                   outlined
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="Curso.description"
+                  v-model="Curso.descripcion"
                   label="Descripción"
                   outlined
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="Curso.codigo"
+                  v-model="Curso.codigoInterno"
                   label="Código"
                   outlined
                 ></v-text-field>
@@ -143,14 +147,17 @@
               </v-col>
             </v-row>
             <div class="d-flex justify-center">
-              <v-btn
-                color="primary darken-1"
-                class="mx-1"
-                @click="modalForm = false"
-              >
+              <v-btn color="primary darken-1" class="mx-1" @click="saveCurso()">
                 <span class="text-capitalice">Guardar</span>
               </v-btn>
-              <v-btn color="secondary" class="mx-1" @click="modalForm = false">
+              <v-btn
+                color="secondary"
+                class="mx-1"
+                @click="
+                  CHANGE_STATE_DIALOG({ code: 'dialogCurso', value: false })
+                  Curso = {}
+                "
+              >
                 <span class="text-capitalice">Cancelar</span>
               </v-btn>
             </div>
@@ -162,7 +169,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   async fetch({ store }) {
     await store.dispatch('configuracion/listarCursos')
@@ -171,11 +178,11 @@ export default {
   data: () => ({
     Curso: {},
     headersCursos: [
-      { text: 'ID', value: 'id', sortable: false },
+      { text: 'ID', value: 'cursoId', sortable: false },
       { text: 'Institución', value: 'institucion', sortable: false },
-      { text: 'Nombre', value: 'name', sortable: false, width: 200 },
-      { text: 'Descripción', value: 'description', sortable: false },
-      { text: 'Codigo', value: 'codigo', sortable: false },
+      { text: 'Nombre', value: 'nombre', sortable: false, width: 200 },
+      { text: 'Descripción', value: 'descripcion', sortable: false },
+      { text: 'Codigo', value: 'idInterno', sortable: false },
       { text: 'Área', value: 'area', sortable: false },
       { text: 'Estado', value: 'status', sortable: false },
       {
@@ -192,16 +199,17 @@ export default {
         align: 'center',
         width: 150
       }
-    ],
-    modalForm: false
+    ]
   }),
   computed: {
     ...mapState({
       listaCursos: (state) =>
         JSON.parse(JSON.stringify(state.configuracion.listaCursos))
-    })
+    }),
+    ...mapGetters('configuracion', ['dialogCurso'])
   },
   methods: {
+    ...mapMutations('configuracion', ['CHANGE_STATE_DIALOG']),
     cambiarEstado(item) {
       console.log('Cambiar el estado del curso', item.status)
     },
@@ -210,8 +218,14 @@ export default {
       this.$router.push(`/configuracion/cursos/${item.id}/secciones`)
     },
 
+    saveCurso(item) {
+      const data = this.Curso
+      data.idInstitucion = this.$store.state.auth.user.idInstitucion
+      this.$store.dispatch('configuracion/saveCurso', data)
+    },
+
     editarInstitucion(item) {
-      this.modalForm = true
+      this.CHANGE_STATE_DIALOG({ code: 'dialogCurso', value: true })
       this.Curso = item
     },
     deleteInstitucion(index, item) {

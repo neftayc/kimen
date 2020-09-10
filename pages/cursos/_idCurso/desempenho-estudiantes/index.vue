@@ -82,7 +82,14 @@
               :items="filterData.proyectos"
               return-object
               item-text="nombre"
-            ></v-select>
+            >
+              <template slot="selection" slot-scope="{ item }">
+                {{ item.id }} - {{ item.nombre }}
+              </template>
+              <template slot="item" slot-scope="{ item }">
+                {{ item.id }} - {{ item.nombre }}
+              </template>
+            </v-select>
           </div>
         </div>
         <div
@@ -111,6 +118,7 @@
       </div>
       <div v-else class="d-flex align-center">
         <v-switch
+          v-if="listaJugadores.length"
           v-model="showProyectos"
           hide-details
           label="Detalle Proyectos"
@@ -281,6 +289,33 @@
                   .find((x) => selectedProject.id === x.id)
                   .fases.find((d) => d.id === selectedFase.id).kpiData
                   .kpiSatisfaccionAdquirido
+              "
+            />
+          </div>
+        </div>
+      </template>
+      <template v-slot:item.faseKPITotal="{ item }">
+        <div v-if="item.kpiProyectos.find((x) => selectedProject.id === x.id)">
+          <div
+            v-if="
+              item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
+                .length &&
+              item.kpiProyectos
+                .find((x) => selectedProject.id === x.id)
+                .fases.find((d) => d.id === selectedFase.id)
+            "
+          >
+            <ItemProjectKPI
+              :estado="selectedProject.finalizado"
+              :kpi-total="
+                item.kpiProyectos
+                  .find((x) => selectedProject.id === x.id)
+                  .fases.find((d) => d.id === selectedFase.id).kpiTotal
+              "
+              :kpi="
+                item.kpiProyectos
+                  .find((x) => selectedProject.id === x.id)
+                  .fases.find((d) => d.id === selectedFase.id).kpiTotal
               "
             />
           </div>
@@ -497,11 +532,16 @@
           </div>
         </div>
       </template>
-      <template v-slot:item.faseKPITotal="{ item }">
+      <template v-slot:item.faseTotal="{ item }">
         <div
           v-if="
             item.kpiProyectos.find((x) => selectedProject.id === x.id).fases
-              .length
+              .length &&
+            item.kpiProyectos.find((x) => selectedProject.id === x.id)
+              .finalizado
+              ? true
+              : item.kpiProyectos.find((x) => selectedProject.id === x.id)
+                  .kpiTotal
           "
         >
           <v-badge
@@ -566,7 +606,7 @@
         <!--Aqui se debe mostrar el proyecto del estudiante que esta en proceso-->
         <v-list-item class="px-0">
           <v-list-item-content>
-            <v-list-item-title class="text-body-2">
+            <v-list-item-title style="white-space: normal;" class="text-body-2">
               {{
                 item.kpiProyectos.length
                   ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
@@ -603,7 +643,13 @@
       </template>
       <template v-slot:item.proyecto_kpi_plazo="{ item }">
         <ItemProjectKPI
-          :kpi-total="selectedProject.kpiTotal"
+          :kpi-total="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id).kpiTotal
+          "
+          :estado="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              .finalizado
+          "
           :kpi="
             item.kpiProyectos.find((x) => x.id === selectedProject.id)
               ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
@@ -614,7 +660,13 @@
       </template>
       <template v-slot:item.proyecto_kpi_costo="{ item }">
         <ItemProjectKPI
-          :kpi-total="selectedProject.kpiTotal"
+          :estado="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              .finalizado
+          "
+          :kpi-total="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id).kpiTotal
+          "
           :kpi="
             item.kpiProyectos.find((x) => x.id === selectedProject.id)
               ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
@@ -625,7 +677,13 @@
       </template>
       <template v-slot:item.proyecto_kpi_satisfaccion="{ item }">
         <ItemProjectKPI
-          :kpi-total="selectedProject.kpiTotal"
+          :estado="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              .finalizado
+          "
+          :kpi-total="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id).kpiTotal
+          "
           :kpi="
             item.kpiProyectos.find((x) => x.id === selectedProject.id)
               ? item.kpiProyectos.find((x) => x.id === selectedProject.id)
@@ -635,24 +693,34 @@
         />
       </template>
       <template v-slot:item.proyectoKPITotal="{ item }">
-        <v-badge
-          left
-          inline
-          :color="
-            getColor(
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            )
+        <div
+          v-if="
+            item.kpiProyectos.find((x) => x.id === selectedProject.id)
+              .finalizado
+              ? true
+              : item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiTotal
           "
-          dot
         >
-          <small
-            >{{
-              item.kpiProyectos.find((x) => x.id === selectedProject.id)
-                .kpiTotal
-            }}%</small
+          <v-badge
+            left
+            inline
+            :color="
+              getColor(
+                item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiTotal
+              )
+            "
+            dot
           >
-        </v-badge>
+            <small
+              >{{
+                item.kpiProyectos.find((x) => x.id === selectedProject.id)
+                  .kpiTotal
+              }}%</small
+            >
+          </v-badge>
+        </div>
       </template>
       <!--Actions-->
       <template v-slot:item.actions="{ item }">
@@ -714,23 +782,23 @@ export default {
 
     headerEstudiantesCurso: [
       {
-        text: 'Apellidos y Nombres',
-        value: 'nombreApellido',
-        sortable: false,
-        width: 200
-      },
-      {
         text: 'Id Estudiante',
         value: 'idEstudiante',
         sortable: false,
         align: 'center',
-        width: 100
+        width: 50
+      },
+      {
+        text: 'Apellidos y Nombres',
+        value: 'nombreApellido',
+        sortable: false,
+        width: 150
       },
       {
         text: 'Proyecto',
         value: 'proyecto',
         sortable: false,
-        width: 150
+        width: 180
       },
       {
         text: 'Fase',
@@ -739,12 +807,20 @@ export default {
         width: 100
       },
       {
-        text: 'Fase - Total',
+        text: 'KPIs Fase - Total',
         value: 'faseKPITotal',
         sortable: false,
         align: 'center',
         width: 100
       },
+      {
+        text: 'Fase - Total',
+        value: 'faseTotal',
+        sortable: false,
+        align: 'center',
+        width: 100
+      },
+
       {
         text: 'Proyecto - Total',
         value: 'proyectoKPITotal',
@@ -800,7 +876,8 @@ export default {
               x.value !== 'proyecto' &&
               x.value !== 'proyectoKPITotal' &&
               x.value !== 'fase' &&
-              x.value !== 'faseKPITotal'
+              x.value !== 'faseKPITotal' &&
+              x.value !== 'faseTotal'
           )
         )
       )
@@ -824,7 +901,8 @@ export default {
             (x) =>
               x.value !== 'kpiPromedioTotal' &&
               x.value !== 'faseKPITotal' &&
-              x.value !== 'fase'
+              x.value !== 'fase' &&
+              x.value !== 'faseTotal'
           )
         )
       )
@@ -859,7 +937,8 @@ export default {
             (x) =>
               x.value !== 'kpiPromedioTotal' &&
               x.value !== 'proyectoKPITotal' &&
-              x.value !== 'fase'
+              x.value !== 'fase' &&
+              x.value !== 'faseKPITotal'
           )
         )
       )
@@ -881,7 +960,9 @@ export default {
         JSON.stringify(
           this.headerEstudiantesCurso.filter(
             (x) =>
-              x.value !== 'kpiPromedioTotal' && x.value !== 'proyectoKPITotal'
+              x.value !== 'kpiPromedioTotal' &&
+              x.value !== 'proyectoKPITotal' &&
+              x.value !== 'faseTotal'
           )
         )
       )
@@ -950,7 +1031,8 @@ export default {
               (x) =>
                 x.value !== 'kpiPromedioTotal' &&
                 x.value !== 'proyectoKPITotal' &&
-                x.value !== 'fase'
+                x.value !== 'fase' &&
+                x.value !== 'faseKPITotal'
             )
           )
         )
@@ -981,7 +1063,8 @@ export default {
               (x) =>
                 x.value !== 'kpiPromedioTotal' &&
                 x.value !== 'proyectoKPITotal' &&
-                x.value !== 'fase'
+                x.value !== 'fase' &&
+                x.value !== 'faseKPITotal'
             )
           )
         )
@@ -992,6 +1075,36 @@ export default {
             value: 'fase_' + (i + 1),
             align: 'center',
             sortable: false
+          })
+        }
+        if (this.faseProyecto.length === 2) {
+          d.splice(1, 1, {
+            text: 'Apellidos y Nombres',
+            value: 'nombreApellido',
+            sortable: false,
+            width: 300
+          })
+
+          d.splice(2, 1, {
+            text: 'Proyecto',
+            value: 'proyecto',
+            sortable: false,
+            width: 320
+          })
+        }
+
+        if (this.faseProyecto.length === 3) {
+          d.splice(1, 1, {
+            text: 'Apellidos y Nombres',
+            value: 'nombreApellido',
+            sortable: false,
+            width: 220
+          })
+          d.splice(2, 1, {
+            text: 'Proyecto',
+            value: 'proyecto',
+            sortable: false,
+            width: 220
           })
         }
         this.headerFases = d

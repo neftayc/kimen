@@ -8,46 +8,28 @@
       :mini-variant="miniVariant"
       color="primary darken-2"
     >
-      <v-list style="padding: 8px 15px;" dense nav class="mt-8">
-        <v-list-group
-          active-class="white--text text--white"
-          append-icon="mdi-menu-down"
-        >
-          <template slot="activator">
-            <v-list-item-avatar class="align-self-center" color="grey">
-              <v-img :src="require('@/static/avatar.jpg')" />
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title class="font-weight-bold">
-                <template v-if="userInfo">
-                  {{ userInfo.nombre }}
-                  {{ userInfo.apellido }}
-                </template>
-                <template v-else>
-                  User info
-                </template>
-              </v-list-item-title>
-              <v-list-item-subtitle class="text-capitalize text-caption">{{
-                userInfo.rol
-              }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </template>
-          <v-list-item class="ml-5" link to="/account/profile">
-            <v-list-item-content>
-              <v-list-item-title class="caption">
-                <v-icon left small>mdi-minus</v-icon> Mi perfil
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item class="ml-5" link>
-            <v-list-item-content>
-              <v-list-item-title class="caption">
-                <v-icon left small>mdi-minus</v-icon> Configuraciones
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
+      <v-list-item class="mt-11">
+        <v-list-item-avatar class="align-self-center" color="grey">
+          <v-img :src="require('@/static/avatar.jpg')" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title
+            style="white-space: normal;"
+            class="font-weight-bold"
+          >
+            <template v-if="userInfo">
+              {{ userInfo.nombre }}
+              {{ userInfo.apellido }}
+            </template>
+            <template v-else>
+              User info
+            </template>
+          </v-list-item-title>
+          <v-list-item-subtitle class="text-capitalize text-caption">
+            {{ userInfo.rol }}
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
       <v-list>
         <v-divider class="mb-6"></v-divider>
         <template v-for="(item, i) in menuUser">
@@ -192,15 +174,15 @@ export default {
       menuItems: [
         {
           id: 1,
-          icon: 'mdi-text-box-multiple',
-          title: 'Cursos',
-          to: '/cursos'
+          icon: 'mdi-account-group-outline',
+          title: 'Mi Perfil',
+          to: '/account/profile'
         },
         {
           id: 2,
-          icon: 'mdi-account-group-outline',
-          title: 'Estudiantes',
-          to: '/estudiantes'
+          icon: 'mdi-text-box-multiple',
+          title: 'Cursos',
+          to: '/cursos'
         },
         {
           id: 3,
@@ -242,9 +224,9 @@ export default {
       // Dev=4
       // BetaTester=5
       switch (this.userInfo.rol) {
-        case 'ADMINKIMEN':
+        case 'ADMIN_KIMEN':
           return this.menuItems
-        case 'ADMININSTITUCION':
+        case 'ADMIN_INSTITUCION':
           return this.menuItems
         case 'PROFESOR':
           return this.menuItems.filter((x) => x.id !== 3)
@@ -268,7 +250,9 @@ export default {
     }
   },
   methods: {
-    logout() {}
+    logout() {
+      this.$store.commit('LOGOUT_USER')
+    }
   }
 }
 </script>
