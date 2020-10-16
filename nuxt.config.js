@@ -5,7 +5,7 @@ export default {
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
-  mode: 'spa',
+  ssr: false,
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -46,6 +46,11 @@ export default {
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
    */
+  loadingIndicator: {
+    name: 'circle',
+    color: '#62eae4',
+    background: 'black'
+  },
   components: true,
   /*
    ** Nuxt.js dev-modules
@@ -67,15 +72,12 @@ export default {
     // Doc: https://github.com/nuxt/content
     '@nuxt/content'
   ],
-  proxy: {
-    '/api': 'http://192.168.42.161:9000'
-  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    // baseURL: 'https://kime-atenos.azurewebsites.net/api/'
+    // baseURL: 'https://kime-atenos-kimen-v1.azurewebsites.net/api/'
     baseURL: 'https://kimen-1.azurewebsites.net/api/'
     // baseURL: 'https://localhost:5001/api/'
   },
@@ -97,12 +99,11 @@ export default {
       }
     },
     redirect: {
-      callback: '/callback',
+      callback: '/',
       login: '/login',
       logout: '/login',
-      home: '/cursos'
-    },
-    rewriteRedirects: true
+      home: '/'
+    }
   },
   /*
    ** Content module configuration

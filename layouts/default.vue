@@ -1,147 +1,127 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
+    <v-app-bar
+      absolute
       app
       dark
-      :mini-variant="miniVariant"
-      color="primary darken-2"
+      flat
+      :elevation="8"
+      height="75"
+      class="main-header"
+      color="secondary"
+      extension-height="100"
     >
-      <v-list-item class="mt-11">
-        <v-list-item-avatar class="align-self-center" color="grey">
-          <v-img :src="require('@/static/avatar.jpg')" />
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title
-            style="white-space: normal;"
-            class="font-weight-bold"
-          >
-            <template v-if="userInfo">
-              {{ userInfo.nombre }}
-              {{ userInfo.apellido }}
-            </template>
-            <template v-else>
-              User info
-            </template>
-          </v-list-item-title>
-          <v-list-item-subtitle class="text-capitalize text-caption">
-            {{ userInfo.rol }}
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list>
-        <v-divider class="mb-6"></v-divider>
-        <template v-for="(item, i) in menuUser">
-          <v-list-item
-            v-if="!item.menu_items"
-            :key="'menu-' + i"
-            :to="item.to"
-            router
-            exact
-          >
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.title" />
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-group
-            v-else
-            :key="'menus-' + i"
-            active-class="white--text text--white"
-            append-icon="mdi-menu-down"
-          >
-            <template slot="activator">
-              <v-list-item-icon>
-                <v-icon>
-                  {{ item.icon }}
-                </v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item-content>
-            </template>
-            <v-list-item
-              v-for="subItem in item.menu_items"
-              :key="subItem.title"
-              class="pl-5"
-              active-class=" white--text"
-              link
-              :to="subItem.to"
-            >
-              <v-list-item-content>
-                <v-list-item-title class="text-caption">
-                  {{ subItem.title }}
-                </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon x-small>mdi-forwardburger</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-group>
-        </template>
-      </v-list>
-
-      <template v-slot:append>
-        <div class="pa-3">
-          <v-divider></v-divider>
-          <div class="pt-2 d-flex justify-space-between align-center">
-            <img
-              contain
-              height="30px"
-              :src="require('@/static/logoKimen.png')"
-            />
-            <span class="caption white--text">v1.2</span>
-          </div>
-        </div>
-      </template>
-    </v-navigation-drawer>
-
-    <v-app-bar absolute app color="transparent" flat height="75">
-      <v-app-bar-nav-icon
-        @click.stop="miniVariant = !miniVariant"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title v-text="titlePage" />
+      <div class="d-flex align-center">
+        <v-img
+          style="width: 30px;"
+          contain
+          :src="require('@/static/image/iconKimen.png')"
+        ></v-img>
+        <span
+          class="font-weight-bold ml-2 text-h5"
+          style="letter-spacing: 12px !important;"
+          >KIMEN</span
+        >
+      </div>
       <v-spacer />
-      <div class="d-flex">
-        <v-list-item>
-          <v-list-item-avatar tile class="ma-0" :size="50">
-            <v-img
-              width="100%"
-              :src="
-                userInfo.logoInstitucion
-                  ? userInfo.logoInstitucion
-                  : require('@/static/v.png')
-              "
-              contain
-            />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ userInfo.nombreInstitucion }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-tooltip left>
-          <template v-slot:activator="{ on }">
+      <div v-if="$vuetify.breakpoint.lgAndUp" class="d-flex">
+        <div v-for="(item, index) in menuUser" :key="index" class="inline mx-5">
+          <template v-if="item.menu_items">
+            <v-menu :key="'index_child_' + index" open-on-hover bottom offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text dark v-on="on">
+                  <span
+                    class="text-capitalize font-weight-medium text-body-2 text-lg-body-1"
+                  >
+                    {{ item.title }}
+                  </span>
+                </v-btn>
+              </template>
+              <v-list dense tile>
+                <v-list-item
+                  v-for="(subItem, ii) in item.menu_items"
+                  :key="ii"
+                  :to="subItem.to"
+                >
+                  <v-list-item-title>{{ subItem.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
+          <template v-else>
             <v-btn
-              id="logout_web"
-              icon
-              color="grey darken-1"
-              to="/login"
-              v-on="on"
-              @click="logout"
+              :key="index"
+              text
+              dark
+              :to="item.to"
+              rippled="false"
+              active-class="primary darken-1"
             >
-              <v-icon> mdi-exit-to-app</v-icon>
+              <span class="text-capitalize easy-body-2 font-weight-medium">
+                {{ item.title }}
+              </span>
             </v-btn>
           </template>
-          <span>Salir</span>
-        </v-tooltip>
+        </div>
       </div>
+      <v-spacer />
+      <div>
+        <v-btn
+          depressed
+          color="primary "
+          dark
+          large
+          class="rounded-xl"
+          @click="logout()"
+        >
+          <v-icon class="mr-1">mdi-bullseye-arrow</v-icon>
+          <span class="text-capitalize font-weight-bold text-subtitle-2">
+            Right Choice
+          </span>
+          <v-icon right small>mdi-logout</v-icon>
+        </v-btn>
+      </div>
+      <template v-slot:extension>
+        <div class="header-extension-item">
+          <v-list-item class="px-0">
+            <v-list-item-avatar
+              class="align-self-center"
+              color="grey"
+              :size="60"
+            >
+              <v-img :src="require('@/static/avatar.jpg')" />
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title
+                style="white-space: normal;"
+                class="font-weight-bold"
+              >
+                <template v-if="userInfo">
+                  {{ userInfo.nombre }}
+                  {{ userInfo.apellido }}
+                </template>
+                <template v-else>
+                  User info
+                </template>
+              </v-list-item-title>
+              <v-list-item-subtitle
+                class="text-capitalize text-caption"
+                v-html="userInfo.rol"
+              >
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
+        <div class="text-center">
+          <h1 class="font-weight-bold text-center">
+            {{ titlePage.title }}
+          </h1>
+          <p class="text-h6 font-weight-regular">
+            {{ titlePage.subtitle }}
+          </p>
+        </div>
+        <div class="header-extension-item"></div>
+      </template>
     </v-app-bar>
 
     <v-main>
@@ -165,7 +145,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  middleware: ['auth', 'route'],
+  middleware: ['auth'],
   data() {
     return {
       clipped: false,
@@ -175,32 +155,52 @@ export default {
         {
           id: 1,
           icon: 'mdi-account-group-outline',
-          title: 'Mi Perfil',
-          to: '/account/profile'
+          title: 'Inicio',
+          to: '/'
         },
         {
           id: 2,
-          icon: 'mdi-text-box-multiple',
-          title: 'Cursos',
-          to: '/cursos'
+          icon: 'mdi-account-group-outline',
+          title: 'Perfil',
+          to: '/account/profile#'
         },
         {
           id: 3,
           icon: 'mdi-cogs',
           title: 'Configuracion',
-          to: '',
+          to: '/configuracion',
           menu_items: [
             {
+              id: 11,
+              icon: 'mdi-account-group-outline',
+              title: 'Usuarios',
+              to: '/configuracion/usuarios'
+            },
+            {
+              id: 10,
               icon: 'mdi-account-group-outline',
               title: 'Instituciones',
               to: '/configuracion/institucion'
             },
             {
+              id: 11,
               icon: 'mdi-account-group-outline',
               title: 'Cursos',
               to: '/configuracion/cursos'
             }
           ]
+        },
+        {
+          id: 4,
+          icon: 'mdi-text-box-multiple',
+          title: 'Cursos',
+          to: '/cursos'
+        },
+        {
+          id: 5,
+          icon: 'mdi-text-box-multiple',
+          title: 'Estudiantes',
+          to: '/estudiantes'
         }
       ],
       miniVariant: false,
@@ -229,15 +229,15 @@ export default {
         case 'ADMIN_INSTITUCION':
           return this.menuItems
         case 'PROFESOR':
-          return this.menuItems.filter((x) => x.id !== 3)
+          return this.menuItems // .filter((x) => x.id !== 3)
         case 'ESTUDIANTE':
-          return []
+          return this.menuItems
         case 'DEV':
-          return []
+          return this.menuItems
         case 'BETATESTER':
-          return []
+          return this.menuItems
         default:
-          return []
+          return this.menuItems
       }
     },
     input_snackbar: {
@@ -250,10 +250,24 @@ export default {
     }
   },
   methods: {
-    logout() {
-      this.$store.commit('LOGOUT_USER')
+    async logout() {
+      await this.$auth.logout()
     }
   }
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.main-header {
+  .theme--dark.v-btn--active:hover::before,
+  .theme--dark.v-btn--active::before {
+    opacity: 0.1;
+  }
+  .v-toolbar__extension {
+    justify-content: space-between;
+  }
+  .header-extension-item {
+    max-width: 270px;
+    min-width: 270px;
+  }
+}
+</style>

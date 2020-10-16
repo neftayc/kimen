@@ -1,28 +1,33 @@
 <template>
-  <v-container fluid>
-    <v-card>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Instituciones</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-tooltip bottom>
+  <v-container class="mt-11">
+    <div class="d-flex justify-space-between mb-3 align-end">
+      <h3 class="text-subtitle-1 font-weight-bold">
+        <v-icon color="black">mdi-format-list-text</v-icon> Lista de
+        Instituciones
+      </h3>
+      <div>
+        <v-tooltip top>
           <template v-slot:activator="on">
             <v-btn
-              depressed
-              class="px-1"
-              small
+              class="px-1 rounded-circle"
               :min-width="0"
+              height="50"
+              width="50"
               color="primary"
               v-on="on"
               @click="modalForm = true"
             >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon large>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>Anadir Institución</span>
+          <span>Añadir Institución</span>
         </v-tooltip>
-      </v-toolbar>
-      <v-divider></v-divider>
+      </div>
+    </div>
+
+    <v-card elevation="7">
       <v-data-table
+        class="curso-table curso"
         hide-default-footer
         :headers="headersInstitucion"
         :items="listaInstitucion"
@@ -134,6 +139,10 @@ export default {
   async fetch({ store }) {
     await store.dispatch('configuracion/listarInstituciones')
     await store.commit('CHANGE_PAGE_TITLE', 'Configuración')
+    await store.commit('CHANGE_PAGE_TITLE', {
+      title: 'Configuración - Institución',
+      subtitle: ''
+    })
   },
   data: () => ({
     Institucion: {},

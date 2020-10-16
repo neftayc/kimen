@@ -1,45 +1,27 @@
 <template>
-  <div class="d-flex align-center justify-center">
-    <div>
-      <v-card
-        flat
-        width="60px"
-        fill-height
-        style="line-height: 1;"
-        class="transparent py-3 text-center"
-      >
-        <v-badge left inline :color="getColor(proyecto.kpiTotal)" dot>
-          <small v-if="!proyecto.finalizado ? proyecto.kpiTotal !== 0 : true">
-            {{ proyecto.kpiTotal }}%
-          </small>
-        </v-badge>
-        <br />
-        <small>{{
-          !proyecto.finalizado
-            ? proyecto.kpiTotal === 0
-              ? 'En espera'
-              : 'En proceso'
-            : 'Finalizado'
-        }}</small>
-      </v-card>
-    </div>
-    <div v-if="false" class="text-left">
-      <div class="text-caption black--text" style="line-height: 1.2;">
-        {{ proyecto.nombre }}
-      </div>
-      <div
-        class="text-caption"
-        :class="proyecto.finalizado ? '' : 'primary--text'"
-      >
-        <small>{{
-          proyecto.kpiTotal !== 0
-            ? proyecto.finalizado
-              ? 'Finalizado'
-              : 'En proceso'
-            : 'En espera'
-        }}</small>
-      </div>
-    </div>
+  <div v-if="true" class="py-3">
+    <v-progress-linear
+      :color="getColor(proyecto.kpiTotal)"
+      :value="proyecto.kpiTotal"
+      rounded
+      :height="10"
+    ></v-progress-linear>
+    <span>
+      {{
+        !proyecto.finalizado
+          ? proyecto.kpiTotal !== 0
+            ? proyecto.kpiTotal + '%'
+            : ''
+          : proyecto.kpiTotal + '%'
+      }}
+      {{
+        !proyecto.finalizado
+          ? proyecto.kpiTotal === 0
+            ? 'En espera'
+            : 'En proceso'
+          : 'Finalizado'
+      }}
+    </span>
   </div>
 </template>
 

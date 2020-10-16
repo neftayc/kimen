@@ -7,7 +7,7 @@
         <div>
           <v-list-item>
             <v-list-item-avatar tile class="ma-0">
-              <v-img :src="datosValidacion.nombreInstitucion" />
+              <v-img :src="datosValidacion.logoInsitucion" />
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{

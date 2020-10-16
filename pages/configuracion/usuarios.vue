@@ -1,29 +1,32 @@
 <template>
-  <v-container fluid>
-    <v-card>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Gestionar Usuarios</v-toolbar-title>
-
-        <v-spacer></v-spacer>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
+  <v-container class="mt-11">
+    <div class="d-flex justify-space-between mb-3 align-end">
+      <h3 class="text-subtitle-1 font-weight-bold">
+        <v-icon color="black">mdi-format-list-text</v-icon> Lista de usuarios
+      </h3>
+      <div>
+        <v-tooltip top>
+          <template v-slot:activator="on">
             <v-btn
-              depressed
-              class="px-1"
-              small
+              class="px-1 rounded-circle"
               :min-width="0"
+              height="50"
+              width="50"
               color="primary"
               v-on="on"
               @click="modalForm = true"
             >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon large>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>Anadir Usuario</span>
+          <span>Añadir Usuario</span>
         </v-tooltip>
-      </v-toolbar>
-      <v-divider></v-divider>
+      </div>
+    </div>
+
+    <v-card elevation="7">
       <v-data-table
+        class="curso-table curso"
         hide-default-footer
         :headers="headersUsuarios"
         :items="listaUsuarios"
@@ -195,6 +198,12 @@
 <script>
 import { mapState } from 'vuex'
 export default {
+  async fetch({ store }) {
+    await store.commit('CHANGE_PAGE_TITLE', {
+      title: 'Configuración - Usuarios',
+      subtitle: ''
+    })
+  },
   data: () => ({
     Usuario: {},
     loading: false,
@@ -212,7 +221,7 @@ export default {
       { text: 'Tipo', value: 'type', sortable: false },
       { text: 'Secciones', value: 'secciones', sortable: false },
       {
-        text: 'Accions',
+        text: 'Acciones',
         value: 'actions',
         sortable: false,
         align: 'center',

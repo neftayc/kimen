@@ -1,18 +1,17 @@
 <template>
-  <v-container fluid>
-    {{ dialogCurso }}
-    <v-card>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Gestión de Cursos</v-toolbar-title>
-
-        <v-spacer></v-spacer>
-        <v-tooltip bottom>
+  <v-container class="mt-11">
+    <div class="d-flex justify-space-between mb-3 align-end">
+      <h3 class="text-subtitle-1 font-weight-bold">
+        <v-icon color="black">mdi-format-list-text</v-icon> Gestión de Cursos
+      </h3>
+      <div>
+        <v-tooltip top>
           <template v-slot:activator="on">
             <v-btn
-              depressed
-              class="px-1"
-              small
+              class="px-1 rounded-circle"
               :min-width="0"
+              height="50"
+              width="50"
               color="primary"
               v-on="on"
               @click="
@@ -20,14 +19,16 @@
                 Curso = {}
               "
             >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon large>mdi-plus</v-icon>
             </v-btn>
           </template>
           <span>Añadir Curso</span>
         </v-tooltip>
-      </v-toolbar>
-      <v-divider></v-divider>
+      </div>
+    </div>
+    <v-card elevation="7">
       <v-data-table
+        class="curso-table curso"
         hide-default-footer
         :headers="headersCursos"
         :items="listaCursos"
@@ -38,7 +39,7 @@
               <v-btn
                 small
                 dark
-                color="primary darken-1"
+                color="primary darken-1 "
                 class="px-2 mx-1"
                 :min-width="0"
                 v-on="on"
@@ -173,14 +174,17 @@ import { mapState, mapMutations, mapGetters } from 'vuex'
 export default {
   async fetch({ store }) {
     await store.dispatch('configuracion/listarCursos')
-    await store.commit('CHANGE_PAGE_TITLE', 'Configuración')
+    await store.commit('CHANGE_PAGE_TITLE', {
+      title: 'Configuración - Cursos',
+      subtitle: ''
+    })
   },
   data: () => ({
     Curso: {},
     headersCursos: [
       { text: 'ID', value: 'cursoId', sortable: false },
       { text: 'Institución', value: 'institucion', sortable: false },
-      { text: 'Nombre', value: 'nombre', sortable: false, width: 200 },
+      { text: 'Nombre', value: 'nombre', sortable: false },
       { text: 'Descripción', value: 'descripcion', sortable: false },
       { text: 'Codigo', value: 'idInterno', sortable: false },
       { text: 'Área', value: 'area', sortable: false },

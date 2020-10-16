@@ -1,9 +1,18 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="mt-11">
     <v-row justify="center">
-      <h3>Bienvenidos a KIMEN</h3>
+      <h1>Bienvenidos a KIMEN</h1>
     </v-row>
   </v-container>
 </template>
 
-<script></script>
+<script>
+export default {
+  async fetch({ store }) {
+    await store.commit('CHANGE_PAGE_TITLE', {
+      title: 'Inicio',
+      subtitle: ''
+    })
+  }
+}
+</script>

@@ -1,13 +1,15 @@
 <template>
-  <v-badge
+  <v-progress-circular
     v-if="estado ? true : kpiTotal"
-    left
-    inline
+    class="my-2"
+    :rotate="-90"
+    :size="50"
+    :width="7"
+    :value="kpi"
     :color="getColor(kpi)"
-    dot
   >
-    <small> {{ kpi }}% </small>
-  </v-badge>
+    {{ kpi }}%
+  </v-progress-circular>
 </template>
 
 <script>

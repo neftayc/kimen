@@ -3,7 +3,6 @@ const debug = process.env.NODE_ENV !== 'production'
 export const strict = debug
 export const plugins = [createLogger()]
 export const state = () => ({
-  auth: '',
   user: {},
   snackbar: {
     x: 'right',
@@ -32,9 +31,6 @@ export const mutations = {
   },
   CHANGE_PAGE_TITLE(state, payload) {
     state.titlePage = payload
-  },
-  LOGOUT_USER(state, payload) {
-    state.auth = ''
   }
 }
 export const actions = {}

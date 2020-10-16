@@ -2,12 +2,22 @@ body {
   background: #ccc;
 }
 .curso-table {
+  &.curso .v-data-table-header {
+    & th {
+      font-size: 0.9rem;
+    }
+  }
   & .v-data-table-header {
-    background: var(--v-primary-darken1);
+    
+    background: var(--v-primary-base);
     & th {
       height: 55px !important;
       color: white !important;
     }
+  }
+  & .v-data-table__wrapper {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
   }
   .v-badge__wrapper {
     span {
