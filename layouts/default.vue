@@ -105,6 +105,7 @@
                 </template>
               </v-list-item-title>
               <v-list-item-subtitle
+                v-if="userInfo"
                 class="text-capitalize text-caption"
                 v-html="userInfo.rol"
               >

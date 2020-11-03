@@ -289,9 +289,9 @@ export default {
       this.$router.push('desempenho-estudiantes')
     },
     getColor(x) {
-      if (x >= 85) return '#2BBE21'
-      else if (x >= 60 && x < 85) return '#ffdf00'
-      else if (x < 60) return '#D62D2D'
+      if (x >= 80) return '#2BBE21'
+      else if (x >= 50 && x < 80) return '#ffdf00'
+      else if (x < 50) return '#D62D2D'
     },
 
     // time in seconds

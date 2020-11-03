@@ -90,9 +90,8 @@ export default {
             method: 'post',
             propertyName: 'trace'
           },
-          logout: false,
-          // user: false,
-          user: { url: 'usuarios/datos/', method: 'get', propertyName: false }
+          user: { url: 'usuarios/datos/', method: 'get', propertyName: false },
+          logout: false
         },
         tokenRequired: true,
         tokenType: 'Bearer'
