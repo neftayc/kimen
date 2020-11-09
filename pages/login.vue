@@ -55,7 +55,12 @@
                   @click:append="show1 = !show1"
                   @keypress.enter="userLogin"
                 ></v-text-field>
-                <v-checkbox label="Recuérdame" small dense></v-checkbox>
+                <v-checkbox
+                  v-if="false"
+                  label="Recuérdame"
+                  small
+                  dense
+                ></v-checkbox>
                 <v-card-actions class="d-flex justify-center mx-sm-11 mb-11">
                   <v-btn
                     class="mx-auto rounded-xl"
@@ -65,9 +70,9 @@
                     :loading="loading"
                     @click="userLogin"
                   >
-                    <span class="text-capitalize font-weight-bold"
-                      >Ingresar</span
-                    >
+                    <span class="text-capitalize font-weight-bold">
+                      Ingresar
+                    </span>
                   </v-btn>
                 </v-card-actions>
                 <div class="text-center">

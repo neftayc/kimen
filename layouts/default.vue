@@ -230,9 +230,9 @@ export default {
         case 'ADMIN_INSTITUCION':
           return this.menuItems
         case 'PROFESOR':
-          return this.menuItems // .filter((x) => x.id !== 3)
+          return this.menuItems.filter((x) => x.id !== 3 && x.id !== 5)
         case 'ESTUDIANTE':
-          return this.menuItems
+          return this.menuItems.filter((x) => x.id !== 3 && x.id !== 4)
         case 'DEV':
           return this.menuItems
         case 'BETATESTER':

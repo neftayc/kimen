@@ -77,8 +77,8 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    // baseURL: 'https://kime-atenos-kimen-v1.azurewebsites.net/api/'
-    baseURL: 'https://kimen-1.azurewebsites.net/api/'
+    baseURL: 'https://kime-atenos-kimen-v1.azurewebsites.net/api/'
+    // baseURL: 'https://kimen-1.azurewebsites.net/api/'
     // baseURL: 'https://localhost:5001/api/'
   },
   auth: {
@@ -98,7 +98,7 @@ export default {
       }
     },
     redirect: {
-      callback: '/',
+      callback: '/login',
       login: '/login',
       logout: '/login',
       home: '/'

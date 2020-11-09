@@ -65,7 +65,7 @@
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </template>
-            <span>Elimanar</span>
+            <span>Eliminar</span>
           </v-tooltip>
         </template>
       </v-data-table>

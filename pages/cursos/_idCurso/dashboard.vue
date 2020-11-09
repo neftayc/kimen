@@ -236,7 +236,7 @@ export default {
         width: 100
       },
       {
-        text: 'Alumnos que Finalizarón',
+        text: 'Alumnos que Finalizaron',
         value: 'contEstudiantesFinalizados',
         sortable: false,
         align: 'center',
