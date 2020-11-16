@@ -34,3 +34,7 @@ export const mutations = {
   }
 }
 export const actions = {}
+
+export const getters = {
+  titlePage: (state) => state.titlePage
+}

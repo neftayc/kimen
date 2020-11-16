@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   middleware: ['auth'],
@@ -213,7 +213,7 @@ export default {
   computed: {
     ...mapState({
       snackbar: (state) => state.snackbar,
-      titlePage: (state) => state.titlePage,
+      // titlePage: (state) => state.titlePage,
       userInfo: (state) => (state.auth ? state.auth.user : {})
     }),
     menuUser() {
@@ -248,7 +248,8 @@ export default {
       set(value) {
         this.$store.commit('SHOW_SNACKBAR_STATE', value)
       }
-    }
+    },
+    ...mapGetters(['titlePage'])
   },
   methods: {
     async logout() {
